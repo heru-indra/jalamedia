@@ -177,741 +177,300 @@ export default async function DashboardPage() {
   const firstName = session.user.name.split(" ")[0];
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
+    <div className="min-h-screen bg-[#0a0a0a] px-12 py-11 font-mono">
 
-        /* ── Base ── */
-        .dash {
-          min-height: 100%;
-          background: #0d0d0d;
-          padding: 44px 48px;
-          font-family: 'DM Mono', monospace;
-        }
-
-        /* ── Header ── */
-        .dash-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 44px;
-          gap: 24px;
-        }
-        .dash-greeting {
-          font-size: 13px;
-          color: #666;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          margin-bottom: 8px;
-        }
-        .dash-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 44px;
-          font-weight: 300;
-          color: #f0e8d8;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
-        }
-        .dash-title em {
-          font-style: italic;
-          color: #c9a060;
-        }
-        .dash-new-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 13px 24px;
-          background: #c9a060;
-          border: none;
-          border-radius: 6px;
-          color: #0d0d0d;
-          font-family: 'DM Mono', monospace;
-          font-size: 13px;
-          font-weight: 400;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          text-decoration: none;
-          cursor: pointer;
-          transition: background 0.15s, transform 0.1s;
-          white-space: nowrap;
-          flex-shrink: 0;
-        }
-        .dash-new-btn:hover  { background: #d4b070; }
-        .dash-new-btn:active { transform: scale(0.98); }
-
-        /* ── Stats grid ── */
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 14px;
-          margin-bottom: 40px;
-        }
-        .stat-card {
-          background: #141414;
-          border: 1px solid #222;
-          border-radius: 10px;
-          padding: 24px;
-          position: relative;
-          overflow: hidden;
-          transition: border-color 0.2s, transform 0.15s;
-        }
-        .stat-card:hover {
-          border-color: #333;
-          transform: translateY(-1px);
-        }
-        .stat-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(to right, transparent, var(--card-accent, #222), transparent);
-        }
-        .stat-icon-wrap {
-          width: 40px;
-          height: 40px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 20px;
-          color: var(--icon-color, #555);
-          background: var(--icon-bg, rgba(255,255,255,0.04));
-          border: 1px solid var(--icon-border, #222);
-        }
-        .stat-number {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 48px;
-          font-weight: 300;
-          color: #f0e8d8;
-          line-height: 1;
-          margin-bottom: 8px;
-          letter-spacing: -0.03em;
-        }
-        .stat-number.colored {
-          color: var(--icon-color, #f0e8d8);
-        }
-        .stat-name {
-          font-size: 13px;
-          color: #888;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          margin-bottom: 4px;
-        }
-        .stat-desc {
-          font-size: 12px;
-          color: #555;
-          letter-spacing: 0.02em;
-        }
-        .usage-wrap {
-          margin-top: 14px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .usage-track {
-          flex: 1;
-          height: 3px;
-          background: #222;
-          border-radius: 3px;
-          overflow: hidden;
-        }
-        .usage-bar {
-          height: 100%;
-          border-radius: 3px;
-          background: #c9a060;
-          transition: width 0.5s ease;
-        }
-        .usage-bar.warn { background: #e05a5a; }
-        .usage-pct {
-          font-size: 11px;
-          color: #555;
-          white-space: nowrap;
-          letter-spacing: 0.04em;
-        }
-
-        /* ── Two-col layout ── */
-        .dash-body {
-          display: grid;
-          grid-template-columns: 1fr 360px;
-          gap: 16px;
-          align-items: start;
-        }
-
-        /* ── Card shell ── */
-        .card {
-          background: #141414;
-          border: 1px solid #222;
-          border-radius: 10px;
-          overflow: hidden;
-        }
-        .card-head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 20px 24px;
-          border-bottom: 1px solid #1a1a1a;
-        }
-        .card-title {
-          font-size: 13px;
-          color: #aaa;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-        .card-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 12px;
-          color: #555;
-          text-decoration: none;
-          letter-spacing: 0.04em;
-          transition: color 0.15s;
-        }
-        .card-link:hover { color: #c9a060; }
-
-        /* ── Event rows ── */
-        .ev-row {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 16px 24px;
-          border-bottom: 1px solid #181818;
-          text-decoration: none;
-          transition: background 0.12s;
-        }
-        .ev-row:last-child { border-bottom: none; }
-        .ev-row:hover { background: rgba(255,255,255,0.025); }
-
-        .ev-date-box {
-          width: 46px;
-          height: 50px;
-          background: #1a1a1a;
-          border: 1px solid #242424;
-          border-radius: 6px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-        .ev-day {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 22px;
-          font-weight: 300;
-          color: #f0e8d8;
-          line-height: 1;
-        }
-        .ev-mon {
-          font-size: 9px;
-          color: #555;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          margin-top: 2px;
-        }
-
-        .ev-info { flex: 1; min-width: 0; }
-        .ev-name {
-          font-size: 14px;
-          color: #d4ccc0;
-          letter-spacing: 0.01em;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          margin-bottom: 5px;
-        }
-        .ev-meta {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          font-size: 12px;
-          color: #555;
-          flex-wrap: wrap;
-        }
-        .ev-meta-item {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .ev-right {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 7px;
-          flex-shrink: 0;
-        }
-        .ev-age {
-          font-size: 11px;
-          color: #444;
-          letter-spacing: 0.04em;
-        }
-
-        /* ── Empty state ── */
-        .empty {
-          padding: 56px 24px;
-          text-align: center;
-        }
-        .empty-icon {
-          width: 52px;
-          height: 52px;
-          border: 1px solid #222;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 18px;
-          color: #333;
-        }
-        .empty-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 24px;
-          font-weight: 300;
-          color: #555;
-          margin-bottom: 8px;
-        }
-        .empty-sub {
-          font-size: 13px;
-          color: #3a3a3a;
-          letter-spacing: 0.03em;
-          line-height: 1.8;
-          margin-bottom: 24px;
-        }
-        .empty-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 11px 22px;
-          background: transparent;
-          border: 1px solid #2a2a2a;
-          border-radius: 6px;
-          color: #777;
-          font-family: 'DM Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          text-decoration: none;
-          transition: border-color 0.15s, color 0.15s;
-        }
-        .empty-cta:hover { border-color: #c9a060; color: #c9a060; }
-
-        /* ── Right column ── */
-        .right-col { display: flex; flex-direction: column; gap: 14px; }
-
-        /* Tier card */
-        .tier-card {
-          background: #141414;
-          border: 1px solid #222;
-          border-radius: 10px;
-          padding: 24px;
-          position: relative;
-          overflow: hidden;
-        }
-        .tier-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(to right, transparent, var(--tc, #333), transparent);
-        }
-        .tier-card-eyebrow {
-          font-size: 11px;
-          color: #555;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
-        .tier-card-name {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 36px;
-          font-weight: 300;
-          line-height: 1;
-          margin-bottom: 20px;
-        }
-        .tier-feat-list { margin-bottom: 20px; }
-        .tier-feat {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 7px 0;
-          font-size: 13px;
-          letter-spacing: 0.02em;
-          border-bottom: 1px solid #1a1a1a;
-        }
-        .tier-feat:last-child { border-bottom: none; }
-        .tier-feat.on  { color: #aaa; }
-        .tier-feat.off { color: #333; }
-        .tier-feat-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          flex-shrink: 0;
-        }
-        .tier-feat.on  .tier-feat-dot { background: #c9a060; }
-        .tier-feat.off .tier-feat-dot { background: #2a2a2a; }
-        .tier-upgrade-btn {
-          display: block;
-          width: 100%;
-          padding: 12px;
-          background: transparent;
-          border: 1px solid #2a2a2a;
-          border-radius: 6px;
-          color: #666;
-          font-family: 'DM Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          text-align: center;
-          text-decoration: none;
-          transition: border-color 0.15s, color 0.15s, background 0.15s;
-        }
-        .tier-upgrade-btn:hover {
-          border-color: #c9a060;
-          color: #c9a060;
-          background: rgba(201,160,96,0.04);
-        }
-
-        /* Quick actions */
-        .qa-row {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          padding: 15px 22px;
-          text-decoration: none;
-          border-bottom: 1px solid #181818;
-          transition: background 0.12s;
-        }
-        .qa-row:last-child { border-bottom: none; }
-        .qa-row:hover { background: rgba(255,255,255,0.025); }
-        .qa-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 7px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid #222;
-          color: #555;
-          transition: color 0.15s, border-color 0.15s, background 0.15s;
-        }
-        .qa-row:hover .qa-icon {
-          color: #c9a060;
-          border-color: rgba(201,160,96,0.35);
-          background: rgba(201,160,96,0.06);
-        }
-        .qa-text { flex: 1; }
-        .qa-label {
-          font-size: 13px;
-          color: #aaa;
-          letter-spacing: 0.02em;
-          margin-bottom: 3px;
-          transition: color 0.15s;
-        }
-        .qa-row:hover .qa-label { color: #f0e8d8; }
-        .qa-sub {
-          font-size: 11px;
-          color: #444;
-          letter-spacing: 0.03em;
-        }
-        .qa-arrow {
-          color: #333;
-          transition: color 0.15s, transform 0.15s;
-          flex-shrink: 0;
-        }
-        .qa-row:hover .qa-arrow {
-          color: #c9a060;
-          transform: translateX(2px);
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 1200px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr); }
-          .dash-body  { grid-template-columns: 1fr; }
-          .right-col  { display: grid; grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 720px) {
-          .dash         { padding: 28px 20px; }
-          .dash-header  { flex-direction: column; align-items: flex-start; }
-          .stats-grid   { grid-template-columns: 1fr 1fr; gap: 10px; }
-          .right-col    { grid-template-columns: 1fr; }
-          .dash-title   { font-size: 34px; }
-        }
-      `}</style>
-
-      <div className="dash">
-
-        {/* ── Header ── */}
-        <div className="dash-header">
-          <div>
-            <div className="dash-greeting">{greeting}</div>
-            <h1 className="dash-title">
-              {firstName},&nbsp;
-              <em>apa yang ingin</em> Anda buat?
-            </h1>
-          </div>
-          <Link href="/dashboard/events/new" className="dash-new-btn">
-            <IconPlus />
-            Buat Event
-          </Link>
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between gap-6 mb-11">
+        <div>
+          <div className="text-xs text-[#888] tracking-widest uppercase mb-2">{greeting}</div>
+          <h1 className="font-serif text-5xl font-light text-[#f5f0e8] tracking-tight leading-tight">
+            {firstName},&nbsp;
+            <em className="italic text-[#d4b070]">apa yang ingin</em> Anda buat?
+          </h1>
         </div>
+        <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-6 py-3 bg-[#d4b070] rounded-lg text-[#0a0a0a] text-xs font-mono font-semibold tracking-widest uppercase transition-colors hover:bg-[#e0bb80] active:scale-95 flex-shrink-0 whitespace-nowrap">
+          <IconPlus />
+          Buat Event
+        </Link>
+      </div>
 
-        {/* ── Stats ── */}
-        <div className="stats-grid">
+      {/* ── Stats Grid ── */}
+      <div className="grid grid-cols-4 gap-3 mb-10 lg:grid-cols-2 md:grid-cols-2">
 
-          {/* Total event */}
-          <div
-            className="stat-card"
-            style={{
-              "--card-accent": "#c9a060",
-              "--icon-color":  "#c9a060",
-              "--icon-bg":     "rgba(201,160,96,0.1)",
-              "--icon-border": "rgba(201,160,96,0.2)",
-            } as React.CSSProperties}
-          >
-            <div className="stat-icon-wrap"><IconCalendar /></div>
-            <div className="stat-number">{eventTotal.toString()}</div>
-            <div className="stat-name">Total Event</div>
+        {/* Total event */}
+        <div
+          className="bg-[#111] border-2 border-[#1e1e1e] rounded-xl p-6 relative overflow-hidden transition-all hover:border-[#2a2a2a] hover:shadow-lg hover:-translate-y-0.5 group"
+          style={{
+            "--card-accent": "#d4b070",
+            "--icon-color":  "#d4b070",
+            "--icon-bg":     "rgba(212,176,112,0.12)",
+            "--icon-border": "rgba(212,176,112,0.25)",
+          } as React.CSSProperties}
+        >
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `linear-gradient(135deg, transparent, var(--card-accent, #1e1e1e) 50%, transparent)`
+          }} />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-lg bg-[rgba(212,176,112,0.12)] border border-[rgba(212,176,112,0.25)] flex items-center justify-center text-[#d4b070] mb-5"><IconCalendar /></div>
+            <div className="font-serif text-6xl font-light text-[#f5f0e8] leading-none mb-2">{eventTotal.toString()}</div>
+            <div className="text-xs text-[#bbb] tracking-widest uppercase mb-1 font-semibold">Total Event</div>
             {limits.maxEvents < 999 ? (
               <>
-                <div className="stat-desc">Batas {limits.maxEvents} event</div>
-                <div className="usage-wrap">
-                  <div className="usage-track">
+                <div className="text-xs text-[#888]">Batas {limits.maxEvents} event</div>
+                <div className="flex items-center gap-2 mt-3">
+                  <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
                     <div
-                      className={`usage-bar ${usagePercent > 85 ? "warn" : ""}`}
+                      className={`h-full rounded-full transition-all duration-500 ${usagePercent > 85 ? "bg-[#e06060]" : "bg-[#d4b070]"}`}
                       style={{ width: `${usagePercent}%` }}
                     />
                   </div>
-                  <span className="usage-pct">{usagePercent}%</span>
+                  <span className="text-xs text-[#888] w-8 text-right">{usagePercent}%</span>
                 </div>
               </>
             ) : (
-              <div className="stat-desc">Tidak terbatas</div>
+              <div className="text-xs text-[#888]">Tidak terbatas</div>
             )}
           </div>
+        </div>
 
-          {/* Published */}
-          <div
-            className="stat-card"
-            style={{
-              "--card-accent": "#6aaa38",
-              "--icon-color":  "#6aaa38",
-              "--icon-bg":     "rgba(106,170,56,0.1)",
-              "--icon-border": "rgba(106,170,56,0.2)",
-            } as React.CSSProperties}
-          >
-            <div className="stat-icon-wrap"><IconCheckCircle /></div>
-            <div className="stat-number">{eventPublished.toString()}</div>
-            <div className="stat-name">Dipublikasi</div>
-            <div className="stat-desc">Event aktif &amp; publik</div>
+        {/* Published */}
+        <div
+          className="bg-[#111] border-2 border-[#1e1e1e] rounded-xl p-6 relative overflow-hidden transition-all hover:border-[#2a2a2a] hover:shadow-lg hover:-translate-y-0.5"
+          style={{
+            "--card-accent": "#7acc3f",
+            "--icon-color":  "#7acc3f",
+            "--icon-bg":     "rgba(122,204,63,0.12)",
+            "--icon-border": "rgba(122,204,63,0.25)",
+          } as React.CSSProperties}
+        >
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `linear-gradient(135deg, transparent, var(--card-accent, #1e1e1e) 50%, transparent)`
+          }} />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-lg bg-[rgba(122,204,63,0.12)] border border-[rgba(122,204,63,0.25)] flex items-center justify-center text-[#7acc3f] mb-5"><IconCheckCircle /></div>
+            <div className="font-serif text-6xl font-light text-[#f5f0e8] leading-none mb-2">{eventPublished.toString()}</div>
+            <div className="text-xs text-[#bbb] tracking-widest uppercase mb-1 font-semibold">Dipublikasi</div>
+            <div className="text-xs text-[#888]">Event aktif &amp; publik</div>
           </div>
+        </div>
 
-          {/* Draft */}
-          <div
-            className="stat-card"
-            style={{
-              "--card-accent": "#444",
-              "--icon-color":  "#666",
-              "--icon-bg":     "rgba(255,255,255,0.04)",
-              "--icon-border": "#252525",
-            } as React.CSSProperties}
-          >
-            <div className="stat-icon-wrap"><IconClock /></div>
-            <div className="stat-number">{eventDraft.toString()}</div>
-            <div className="stat-name">Draft</div>
-            <div className="stat-desc">Belum dipublikasi</div>
+        {/* Draft */}
+        <div
+          className="bg-[#111] border-2 border-[#1e1e1e] rounded-xl p-6 relative overflow-hidden transition-all hover:border-[#2a2a2a] hover:shadow-lg hover:-translate-y-0.5"
+          style={{
+            "--card-accent": "#666",
+            "--icon-color":  "#999",
+            "--icon-bg":     "rgba(255,255,255,0.08)",
+            "--icon-border": "#2a2a2a",
+          } as React.CSSProperties}
+        >
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `linear-gradient(135deg, transparent, var(--card-accent, #1e1e1e) 50%, transparent)`
+          }} />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-lg bg-[rgba(255,255,255,0.08)] border border-[#2a2a2a] flex items-center justify-center text-[#999] mb-5"><IconClock /></div>
+            <div className="font-serif text-6xl font-light text-[#f5f0e8] leading-none mb-2">{eventDraft.toString()}</div>
+            <div className="text-xs text-[#bbb] tracking-widest uppercase mb-1 font-semibold">Draft</div>
+            <div className="text-xs text-[#888]">Belum dipublikasi</div>
           </div>
+        </div>
 
-          {/* Tier */}
-          <div
-            className="stat-card"
-            style={{
-              "--card-accent": tierColor,
-              "--icon-color":  tierColor,
-              "--icon-bg":     tierBg,
-              "--icon-border": `${tierColor}33`,
-            } as React.CSSProperties}
-          >
-            <div className="stat-icon-wrap"><IconTrendUp /></div>
-            <div className="stat-number colored">{tierLabel}</div>
-            <div className="stat-name">Paket Aktif</div>
-            <div className="stat-desc">
+        {/* Tier */}
+        <div
+          className="bg-[#111] border-2 border-[#1e1e1e] rounded-xl p-6 relative overflow-hidden transition-all hover:border-[#2a2a2a] hover:shadow-lg hover:-translate-y-0.5"
+          style={{
+            "--card-accent": tierColor,
+            "--icon-color":  tierColor,
+            "--icon-bg":     tierBg,
+            "--icon-border": `${tierColor}40`,
+          } as React.CSSProperties}
+        >
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `linear-gradient(135deg, transparent, var(--card-accent, #1e1e1e) 50%, transparent)`
+          }} />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style={{
+              background: `var(--icon-bg)`,
+              border: `1px solid var(--icon-border)`,
+              color: `var(--icon-color)`,
+            }}><IconTrendUp /></div>
+            <div className="font-serif text-6xl font-light leading-none mb-2" style={{ color: tierColor }}>{tierLabel}</div>
+            <div className="text-xs text-[#bbb] tracking-widest uppercase mb-1 font-semibold">Paket Aktif</div>
+            <div className="text-xs text-[#888]">
               {tier === "free"  && "3 event · tanpa publish"}
               {tier === "basic" && "20 event · publish aktif"}
               {tier === "pro"   && "Tak terbatas · featured"}
             </div>
           </div>
-
         </div>
 
-        {/* ── Body ── */}
-        <div className="dash-body">
+      </div>
 
-          {/* Recent events */}
-          <div className="card">
-            <div className="card-head">
-              <span className="card-title">Event Terbaru</span>
-              <Link href="/dashboard/events" className="card-link">
-                Lihat semua <IconArrowRight />
+      {/* ── Body ── */}
+      <div className="grid grid-cols-[1fr_380px] gap-4 lg:grid-cols-1">
+
+        {/* Recent events */}
+        <div className="bg-[#111] border border-[#1e1e1e] rounded-xl overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#1a1a1a] bg-[#0d0d0d]">
+            <span className="text-xs text-[#d0d0d0] tracking-widest uppercase font-semibold">Event Terbaru</span>
+            <Link href="/dashboard/events" className="inline-flex items-center gap-1.5 text-xs text-[#d4b070] hover:text-[#e0bb80] transition-colors">
+              Lihat semua <IconArrowRight />
+            </Link>
+          </div>
+
+          {recentEvents.length === 0 ? (
+            <div className="py-14 px-6 text-center">
+              <div className="w-14 h-14 border border-[#2a2a2a] rounded-lg flex items-center justify-center mx-auto mb-5 text-[#888]"><IconCalendar /></div>
+              <div className="font-serif text-2xl font-light text-[#ccc] mb-2">Belum ada event</div>
+              <div className="text-xs text-[#777] leading-relaxed mb-6">
+                Buat event pertama Anda dan mulai<br />bagikan ke audiens yang lebih luas.
+              </div>
+              <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-4 py-2 border border-[#2a2a2a] rounded-lg text-xs text-[#d4b070] hover:border-[#d4b070] hover:bg-[rgba(212,176,112,0.05)] transition-colors">
+                <IconPlus /> Buat event pertama
               </Link>
             </div>
-
-            {recentEvents.length === 0 ? (
-              <div className="empty">
-                <div className="empty-icon"><IconCalendar /></div>
-                <div className="empty-title">Belum ada event</div>
-                <div className="empty-sub">
-                  Buat event pertama Anda dan mulai<br />bagikan ke audiens yang lebih luas.
-                </div>
-                <Link href="/dashboard/events/new" className="empty-cta">
-                  <IconPlus /> Buat event pertama
-                </Link>
-              </div>
-            ) : (
-              recentEvents.map(({ event: ev, category }) => {
+          ) : (
+            <div className="divide-y divide-[#1a1a1a]">
+              {recentEvents.map(({ event: ev, category }) => {
                 const d = new Date(ev.startDate);
                 return (
                   <Link
                     key={ev.id}
                     href={`/dashboard/events/${ev.id}`}
-                    className="ev-row"
+                    className="flex items-center gap-4 px-6 py-4 hover:bg-[rgba(255,255,255,0.04)] transition-colors"
                   >
-                    <div className="ev-date-box">
-                      <div className="ev-day">{d.getDate()}</div>
-                      <div className="ev-mon">
+                    <div className="w-12 h-14 bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                      <div className="font-serif text-2xl font-light text-[#f5f0e8]">{d.getDate()}</div>
+                      <div className="text-xs text-[#888] tracking-widest uppercase">
                         {d.toLocaleDateString("id-ID", { month: "short" })}
                       </div>
                     </div>
 
-                    <div className="ev-info">
-                      <div className="ev-name">{ev.title}</div>
-                      <div className="ev-meta">
-                        <span className="ev-meta-item">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-[#e8e0d0] font-medium truncate mb-1">{ev.title}</div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-[#999]">
                           <IconMapPin />
                           {ev.location.length > 28
                             ? ev.location.slice(0, 28) + "…"
                             : ev.location}
                         </span>
                         {category && (
-                          <span style={{
-                            fontSize: 10, padding: "1px 7px", borderRadius: 100,
-                            background: "rgba(255,255,255,0.04)", border: "1px solid #1e1e1e",
-                            color: "#3a3a3a", letterSpacing: "0.06em", whiteSpace: "nowrap",
-                          }}>
+                          <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[#2a2a2a] text-[#999]">
                             {category.emoji} {category.name}
                           </span>
                         )}
                         {Number(ev.ticketPrice) > 0 && (
-                          <span>
+                          <span className="text-xs text-[#d4b070] font-semibold">
                             Rp {Number(ev.ticketPrice).toLocaleString("id-ID")}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="ev-right">
+                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                       <StatusBadge status={ev.status ?? "draft"} />
-                      <span className="ev-age">
+                      <span className="text-xs text-[#666]">
                         {formatRelative(new Date(ev.createdAt))}
                       </span>
                     </div>
                   </Link>
                 );
-              })
-            )}
-          </div>
+              })}
+            </div>
+          )}
+        </div>
 
-          {/* Right column */}
-          <div className="right-col">
+        {/* Right column */}
+        <div className="flex flex-col gap-4">
 
-            {/* Tier card */}
-            <div className="tier-card" style={{ "--tc": tierColor } as React.CSSProperties}>
-              <div className="tier-card-eyebrow">Paket Anda</div>
-              <div className="tier-card-name" style={{ color: tierColor }}>
+          {/* Tier card */}
+          <div className="bg-[#111] border border-[#1e1e1e] rounded-xl p-6 relative overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: `linear-gradient(135deg, transparent, ${tierColor}20 50%, transparent)`
+            }} />
+            <div className="relative">
+              <div className="text-xs text-[#888] tracking-widest uppercase font-semibold mb-3">Paket Anda</div>
+              <div className="font-serif text-4xl font-light leading-none mb-5" style={{ color: tierColor }}>
                 {tierLabel}
               </div>
-              <div className="tier-feat-list">
-                <div className={`tier-feat ${limits.maxEvents >= 999 || Number(eventTotal) < limits.maxEvents ? "on" : "off"}`}>
-                  <div className="tier-feat-dot" />
+              <div className="flex flex-col gap-0 mb-5">
+                <div className={`flex items-center gap-2.5 py-1.5 text-xs ${limits.maxEvents >= 999 || Number(eventTotal) < limits.maxEvents ? "text-[#d0d0d0]" : "text-[#666]"}`}>
+                  <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${limits.maxEvents >= 999 || Number(eventTotal) < limits.maxEvents ? "bg-[#d4b070]" : "bg-[#2a2a2a]"}`} />
                   {limits.maxEvents >= 999
                     ? "Event tak terbatas"
                     : `${eventTotal} / ${limits.maxEvents} event`}
                 </div>
-                <div className={`tier-feat ${limits.canPublish ? "on" : "off"}`}>
-                  <div className="tier-feat-dot" />
+                <div className={`flex items-center gap-2.5 py-1.5 text-xs ${limits.canPublish ? "text-[#d0d0d0]" : "text-[#666]"}`}>
+                  <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${limits.canPublish ? "bg-[#d4b070]" : "bg-[#2a2a2a]"}`} />
                   Publish &amp; promosi event
                 </div>
-                <div className={`tier-feat ${limits.featured ? "on" : "off"}`}>
-                  <div className="tier-feat-dot" />
+                <div className={`flex items-center gap-2.5 py-1.5 text-xs ${limits.featured ? "text-[#d0d0d0]" : "text-[#666]"}`}>
+                  <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${limits.featured ? "bg-[#d4b070]" : "bg-[#2a2a2a]"}`} />
                   Featured di homepage
                 </div>
               </div>
               {tier !== "pro" && (
-                <Link href="/dashboard/upgrade" className="tier-upgrade-btn">
+                <Link href="/dashboard/upgrade" className="block w-full px-4 py-2.5 text-center text-xs tracking-widest uppercase font-semibold text-[#d4b070] border border-[#2a2a2a] rounded-lg hover:border-[#d4b070] hover:bg-[rgba(212,176,112,0.06)] transition-colors">
                   Upgrade paket →
                 </Link>
               )}
             </div>
+          </div>
 
-            {/* Quick actions */}
-            <div className="card">
-              <div className="card-head">
-                <span className="card-title">Aksi Cepat</span>
-              </div>
+          {/* Quick actions */}
+          <div className="bg-[#111] border border-[#1e1e1e] rounded-xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#1a1a1a] bg-[#0d0d0d]">
+              <span className="text-xs text-[#d0d0d0] tracking-widest uppercase font-semibold">Aksi Cepat</span>
+            </div>
 
-              <Link href="/dashboard/events/new" className="qa-row">
-                <div className="qa-icon"><IconPlus /></div>
-                <div className="qa-text">
-                  <div className="qa-label">Buat Event Baru</div>
-                  <div className="qa-sub">Draft siap diedit</div>
+            <div className="divide-y divide-[#1a1a1a]">
+              <Link href="/dashboard/events/new" className="flex items-center gap-3.5 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.04)] transition-colors group">
+                <div className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[#2a2a2a] flex items-center justify-center text-[#999] group-hover:text-[#d4b070] group-hover:border-[#d4b070] group-hover:bg-[rgba(212,176,112,0.08)] transition-colors flex-shrink-0"><IconPlus /></div>
+                <div className="flex-1">
+                  <div className="text-xs text-[#d0d0d0] font-semibold mb-0.5 group-hover:text-[#e8e0d0] transition-colors">Buat Event Baru</div>
+                  <div className="text-xs text-[#888]">Draft siap diedit</div>
                 </div>
-                <span className="qa-arrow"><IconArrowRight /></span>
+                <span className="text-[#666] group-hover:text-[#d4b070] transition-colors flex-shrink-0"><IconArrowRight /></span>
               </Link>
 
-              <Link href="/dashboard/events" className="qa-row">
-                <div className="qa-icon"><IconCalendar /></div>
-                <div className="qa-text">
-                  <div className="qa-label">Kelola Event</div>
-                  <div className="qa-sub">Edit, publish, atau hapus</div>
+              <Link href="/dashboard/events" className="flex items-center gap-3.5 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.04)] transition-colors group">
+                <div className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[#2a2a2a] flex items-center justify-center text-[#999] group-hover:text-[#d4b070] group-hover:border-[#d4b070] group-hover:bg-[rgba(212,176,112,0.08)] transition-colors flex-shrink-0"><IconCalendar /></div>
+                <div className="flex-1">
+                  <div className="text-xs text-[#d0d0d0] font-semibold mb-0.5 group-hover:text-[#e8e0d0] transition-colors">Kelola Event</div>
+                  <div className="text-xs text-[#888]">Edit, publish, atau hapus</div>
                 </div>
-                <span className="qa-arrow"><IconArrowRight /></span>
+                <span className="text-[#666] group-hover:text-[#d4b070] transition-colors flex-shrink-0"><IconArrowRight /></span>
               </Link>
 
-              <Link href="/dashboard/analytics" className="qa-row">
-                <div className="qa-icon"><IconTrendUp /></div>
-                <div className="qa-text">
-                  <div className="qa-label">Lihat Analitik</div>
-                  <div className="qa-sub">Performa event Anda</div>
+              <Link href="/dashboard/analytics" className="flex items-center gap-3.5 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.04)] transition-colors group">
+                <div className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[#2a2a2a] flex items-center justify-center text-[#999] group-hover:text-[#d4b070] group-hover:border-[#d4b070] group-hover:bg-[rgba(212,176,112,0.08)] transition-colors flex-shrink-0"><IconTrendUp /></div>
+                <div className="flex-1">
+                  <div className="text-xs text-[#d0d0d0] font-semibold mb-0.5 group-hover:text-[#e8e0d0] transition-colors">Lihat Analitik</div>
+                  <div className="text-xs text-[#888]">Performa event Anda</div>
                 </div>
-                <span className="qa-arrow"><IconArrowRight /></span>
+                <span className="text-[#666] group-hover:text-[#d4b070] transition-colors flex-shrink-0"><IconArrowRight /></span>
               </Link>
 
               {tier === "free" && (
-                <Link href="/dashboard/upgrade" className="qa-row">
-                  <div
-                    className="qa-icon"
-                    style={{
-                      color: "#c9a060",
-                      borderColor: "rgba(201,160,96,0.25)",
-                      background: "rgba(201,160,96,0.06)",
-                    }}
-                  >
+                <Link href="/dashboard/upgrade" className="flex items-center gap-3.5 px-6 py-3.5 hover:bg-[rgba(212,176,112,0.08)] transition-colors group">
+                  <div className="w-9 h-9 rounded-lg bg-[rgba(212,176,112,0.12)] border border-[rgba(212,176,112,0.25)] flex items-center justify-center text-[#d4b070] group-hover:bg-[rgba(212,176,112,0.16)] transition-colors flex-shrink-0">
                     <IconZap />
                   </div>
-                  <div className="qa-text">
-                    <div className="qa-label" style={{ color: "#c9a060" }}>
+                  <div className="flex-1">
+                    <div className="text-xs text-[#d4b070] font-semibold mb-0.5 group-hover:text-[#e0bb80] transition-colors">
                       Upgrade Paket
                     </div>
-                    <div className="qa-sub">Buka fitur publish</div>
+                    <div className="text-xs text-[#888]">Buka fitur publish</div>
                   </div>
-                  <span className="qa-arrow"><IconArrowRight /></span>
+                  <span className="text-[#d4b070] group-hover:text-[#e0bb80] transition-colors flex-shrink-0"><IconArrowRight /></span>
                 </Link>
               )}
             </div>
-
           </div>
+
         </div>
       </div>
-    </>
+    </div>
   );
 }
