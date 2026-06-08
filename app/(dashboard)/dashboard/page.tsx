@@ -35,71 +35,71 @@ export default async function DashboardPage() {
   const totalRev  = published.reduce((s, e) => s + (Number(e.ticketPrice) * (e.ticketSold ?? 0)), 0);
   const atLimit   = tc.maxEvents !== 999 && allEvents.length >= tc.maxEvents;
 
-  const statusCls  = (s: string | null) => s === "published" ? "text-[#6aaa38] bg-[rgba(106,170,56,0.1)] border-[rgba(106,170,56,0.3)]" : s === "cancelled" ? "text-[#e05a5a] bg-[rgba(224,90,90,0.08)] border-[rgba(224,90,90,0.25)]" : "text-[#555] bg-white/[0.04] border-[#252525]";
+  const statusCls  = (s: string | null) => s === "published" ? "text-green-600 bg-green-600/10 border-green-600/30" : s === "cancelled" ? "text-red-500 bg-red-500/10 border-red-500/30" : "text-muted-foreground bg-muted/10 border-muted";
   const statusLbl  = (s: string | null) => s === "published" ? "Aktif" : s === "cancelled" ? "Batal" : "Draft";
 
   return (
-    <div className="min-h-full bg-[#0a0a0a] font-[family-name:var(--font-mono)] p-11">
+    <div className="min-h-full bg-background font-mono p-11">
       <div className="flex items-start justify-between mb-9 flex-wrap gap-4">
         <div>
-          <div className="text-[10px] text-[#333] tracking-[0.16em] uppercase mb-1.5">Dashboard</div>
-          <h1 className="font-[family-name:var(--font-serif)] text-[clamp(24px,3vw,42px)] font-light text-[#f0e8d8] tracking-[-0.01em]">
-            Halo, <em className="italic text-[#c9a060]">{firstName}</em>
+          <div className="text-xs text-muted-foreground tracking-widest uppercase mb-1.5">Dashboard</div>
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-foreground">
+            Halo, <em className="italic text-accent">{firstName}</em>
           </h1>
         </div>
-        <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-5 py-3 bg-[#c9a060] rounded-[7px] text-[#0a0a0a] text-[13px] tracking-widest uppercase no-underline hover:bg-[#d4b070] transition-colors">
+        <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-5 py-3 bg-accent rounded-lg text-background text-xs tracking-widest uppercase no-underline hover:bg-accent/90 transition-colors">
           <IconPlus /> Buat Event
         </Link>
       </div>
 
       {atLimit && (
-        <div className="flex items-center gap-2.5 px-4 py-3 bg-[rgba(201,160,96,0.07)] border border-[rgba(201,160,96,0.25)] rounded-[7px] mb-5 text-[13px] text-[#c9a060]">
-          ⚠ Batas {tc.maxEvents} event. <a href="/dashboard/upgrade" className="text-[#d4b070] underline underline-offset-2 ml-1">Upgrade</a>
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-accent/10 border border-accent/30 rounded-lg mb-5 text-xs text-accent">
+          ⚠ Batas {tc.maxEvents} event. <a href="/dashboard/upgrade" className="text-accent/80 underline underline-offset-2 ml-1">Upgrade</a>
         </div>
       )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-9">
         {[
-          { icon:<IconCal />,   num:allEvents.length,   lbl:"Total Event", sub:tc.maxEvents===999?"Tidak terbatas":`Maks ${tc.maxEvents}`, top:"border-t-[#c9a060]", ic:"bg-[rgba(201,160,96,0.1)] border-[rgba(201,160,96,0.25)] text-[#c9a060]", nc:"text-[#c9a060]" },
-          { icon:<IconCheck />, num:published.length,   lbl:"Dipublish",   sub:`${upcoming.length} akan datang`,                            top:"border-t-[#6aaa38]", ic:"bg-[rgba(106,170,56,0.1)] border-[rgba(106,170,56,0.3)] text-[#6aaa38]",  nc:"text-[#6aaa38]" },
-          { icon:<IconDraft />, num:drafts.length,      lbl:"Draft",       sub:"Belum dipublish",                                           top:"border-t-[#252525]", ic:"bg-white/[0.03] border-[#1e1e1e] text-[#555]",                            nc:"text-[#888]" },
-          { icon:<IconMoney />, num:totalRev>0?`Rp ${Math.round(totalRev/1000)}K`:"—", lbl:"Pendapatan", sub:"Dari tiket terjual",          top:"border-t-[#c9a060]", ic:"bg-[rgba(201,160,96,0.08)] border-[rgba(201,160,96,0.2)] text-[#b48c50]", nc:"text-[#c9a060]" },
+          { icon:<IconCal />,   num:allEvents.length,   lbl:"Total Event", sub:tc.maxEvents===999?"Tidak terbatas":`Maks ${tc.maxEvents}`, top:"border-t-accent", ic:"bg-accent/10 border-accent/30 text-accent", nc:"text-accent" },
+          { icon:<IconCheck />, num:published.length,   lbl:"Dipublish",   sub:`${upcoming.length} akan datang`,                            top:"border-t-green-600", ic:"bg-green-600/10 border-green-600/30 text-green-600",  nc:"text-green-600" },
+          { icon:<IconDraft />, num:drafts.length,      lbl:"Draft",       sub:"Belum dipublish",                                           top:"border-t-muted", ic:"bg-muted/10 border-muted/20 text-muted-foreground",      nc:"text-muted-foreground" },
+          { icon:<IconMoney />, num:totalRev>0?`Rp ${Math.round(totalRev/1000)}K`:"—", lbl:"Pendapatan", sub:"Dari tiket terjual",          top:"border-t-accent", ic:"bg-accent/10 border-accent/20 text-accent/70", nc:"text-accent" },
         ].map((s, i) => (
-          <div key={i} className={`bg-[#0f0f0f] border border-[#1e1e1e] border-t-2 rounded-[10px] p-6 ${s.top}`}>
-            <div className={`w-9 h-9 rounded-[8px] border flex items-center justify-center mb-4 ${s.ic}`}>{s.icon}</div>
-            <div className={`font-[family-name:var(--font-serif)] text-[42px] font-light leading-none tracking-[-0.03em] mb-1 ${s.nc}`}>{s.num}</div>
-            <div className="text-[15px] text-[#888] mb-1">{s.lbl}</div>
-            <div className="text-[11px] text-[#333]">{s.sub}</div>
+          <div key={i} className={`bg-muted/20 border border-muted rounded-xl p-6 border-t-2 ${s.top}`}>
+            <div className={`w-9 h-9 rounded-lg border flex items-center justify-center mb-4 ${s.ic}`}>{s.icon}</div>
+            <div className={`font-serif text-4xl font-light leading-none mb-1 ${s.nc}`}>{s.num}</div>
+            <div className="text-base text-muted-foreground mb-1">{s.lbl}</div>
+            <div className="text-xs text-muted">{s.sub}</div>
           </div>
         ))}
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <div className="text-[10px] text-[#333] tracking-[0.16em] uppercase">Event Terbaru</div>
-        <Link href="/dashboard/events" className="inline-flex items-center gap-1.5 text-[11px] text-[#555] tracking-[0.08em] uppercase no-underline hover:text-[#c9a060] transition-colors">Lihat semua <IconArrow /></Link>
+        <div className="text-xs text-muted tracking-widest uppercase">Event Terbaru</div>
+        <Link href="/dashboard/events" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground tracking-widest uppercase no-underline hover:text-accent transition-colors">Lihat semua <IconArrow /></Link>
       </div>
 
       {recent.length === 0 ? (
-        <div className="py-16 text-center border border-[#141414] rounded-[10px] bg-[#0f0f0f]">
+        <div className="py-16 text-center border border-muted rounded-xl bg-muted/20">
           <div className="text-4xl mb-4 opacity-50">📅</div>
-          <div className="font-[family-name:var(--font-serif)] text-xl font-light text-[#555] mb-2">Belum ada event</div>
-          <p className="text-[13px] text-[#333] mb-6">Mulai buat event pertama Anda.</p>
-          <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(201,160,96,0.07)] border border-[rgba(201,160,96,0.25)] rounded text-[#c9a060] text-[11px] tracking-widest uppercase no-underline"><IconPlus /> Buat Event</Link>
+          <div className="font-serif text-xl font-light text-muted-foreground mb-2">Belum ada event</div>
+          <p className="text-sm text-muted mb-6">Mulai buat event pertama Anda.</p>
+          <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/30 rounded text-accent text-xs tracking-widest uppercase no-underline"><IconPlus /> Buat Event</Link>
         </div>
       ) : (
-        <div className="bg-[#0f0f0f] border border-[#141414] rounded-[10px] overflow-hidden">
-          <div className="grid grid-cols-[1fr_140px_120px_110px] px-5 py-2.5 border-b border-[#141414] bg-[#0a0a0a]">
-            {["Judul","Tanggal","Harga","Status"].map(h => <span key={h} className="text-[10px] text-[#333] tracking-[0.16em] uppercase last:text-right">{h}</span>)}
+        <div className="bg-muted/20 border border-muted rounded-xl overflow-hidden">
+          <div className="grid grid-cols-[1fr_140px_120px_110px] px-5 py-2.5 border-b border-muted bg-background">
+            {["Judul","Tanggal","Harga","Status"].map(h => <span key={h} className="text-xs text-muted tracking-widest uppercase last:text-right">{h}</span>)}
           </div>
           {recent.map(ev => (
-            <div key={ev.id} className="grid grid-cols-[1fr_140px_120px_110px] px-5 items-center min-h-[76px] border-b border-[#0d0d0d] last:border-0 hover:bg-white/[0.015] transition-colors">
+            <div key={ev.id} className="grid grid-cols-[1fr_140px_120px_110px] px-5 items-center min-h-[76px] border-b border-muted/50 last:border-0 hover:bg-white/5 transition-colors">
               <div className="py-4 min-w-0">
-                <Link href={`/dashboard/events/${ev.id}`} className="block text-[15px] text-[#c0b8a8] truncate no-underline hover:text-[#f0e8d8] mb-1 transition-colors">{ev.title}</Link>
+                <Link href={`/dashboard/events/${ev.id}`} className="block text-base text-foreground/80 truncate no-underline hover:text-foreground mb-1 transition-colors">{ev.title}</Link>
               </div>
-              <div className="text-[11px] text-[#333]">{fmtDate(new Date(ev.startDate))}</div>
-              <div className="text-[11px] text-[#555]">{fmtPrice(ev.ticketPrice)}</div>
+              <div className="text-xs text-muted">{fmtDate(new Date(ev.startDate))}</div>
+              <div className="text-xs text-muted-foreground">{fmtPrice(ev.ticketPrice)}</div>
               <div className="flex justify-end">
-                <span className={`inline-flex items-center px-2.5 py-1 text-[10px] tracking-[0.1em] uppercase rounded border ${statusCls(ev.status)}`}>{statusLbl(ev.status)}</span>
+                <span className={`inline-flex items-center px-2.5 py-1 text-xs tracking-widest uppercase rounded border ${statusCls(ev.status)}`}>{statusLbl(ev.status)}</span>
               </div>
             </div>
           ))}
