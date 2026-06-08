@@ -1,0 +1,145 @@
+/* src/app/(dashboard)/events/[id]/event-detail.css */
+
+.det-page { min-height: 100%; background: var(--c-bg); font-family: var(--font-mono); }
+
+/* Hero */
+.det-hero {
+  position: relative; background: var(--c-bg-2);
+  border-bottom: 1px solid var(--c-bg-3);
+  padding: 36px 48px 32px; overflow: hidden;
+}
+.det-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 50% 80% at 80% 50%, rgba(180,140,80,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 60% at 10% 80%, rgba(180,140,80,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.det-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 24px; font-size: var(--fs-sm); color: var(--c-text-5); letter-spacing: 0.08em;
+}
+.det-breadcrumb a {
+  color: var(--c-text-5); text-decoration: none;
+  display: flex; align-items: center; gap: 6px; transition: color var(--t-fast);
+}
+.det-breadcrumb a:hover { color: var(--c-gold); }
+.det-breadcrumb-sep { color: var(--c-border); }
+
+.det-hero-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+}
+.det-hero-left { flex: 1; min-width: 0; }
+.det-event-label {
+  font-size: 10px; color: var(--c-text-5); letter-spacing: var(--ls-label); text-transform: uppercase; margin-bottom: 10px;
+}
+.det-event-title {
+  font-family: var(--font-serif);
+  font-size: clamp(var(--fs-xl), 3vw, var(--fs-3xl));
+  font-weight: 300; color: var(--c-text); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 16px;
+}
+.det-event-title em { font-style: italic; color: var(--c-gold); }
+
+.det-hero-chips { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.det-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; border-radius: 100px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--c-border);
+  font-size: var(--fs-sm); color: var(--c-text-3); letter-spacing: var(--ls-tight);
+}
+.det-chip svg { width: 13px; height: 13px; color: var(--c-text-5); flex-shrink: 0; }
+
+.det-hero-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0;
+}
+.det-upcoming {
+  font-size: var(--fs-xs); color: var(--c-gold); letter-spacing: var(--ls-wide);
+  text-transform: uppercase; padding: 5px 12px;
+  background: var(--c-gold-bg); border: 1px solid var(--c-gold-border); border-radius: var(--r-sm);
+}
+
+/* Body */
+.det-body { display: grid; grid-template-columns: 1fr 280px; }
+.det-main { padding: 36px 48px; border-right: 1px solid var(--c-bg-3); }
+.det-side { padding: 28px 24px; position: sticky; top: 0; height: fit-content; }
+
+.det-section { margin-bottom: 36px; padding-bottom: 36px; border-bottom: 1px solid var(--c-bg-3); }
+.det-section:last-child { border-bottom: none; }
+.det-section-title {
+  font-size: var(--fs-label); color: var(--c-text-4); letter-spacing: var(--ls-label);
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.det-description {
+  font-size: var(--fs-base); color: var(--c-text-3); line-height: 1.8; letter-spacing: var(--ls-tight);
+}
+
+/* Info rows */
+.det-info-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid #111;
+}
+.det-info-icon {
+  width: 34px; height: 34px; border-radius: 7px;
+  border: 1px solid var(--c-bg-3); background: rgba(255,255,255,0.02);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-text-4); flex-shrink: 0;
+}
+.det-info-icon.accent { color: var(--c-gold); }
+.det-info-label { font-size: var(--fs-xs); color: var(--c-text-5); letter-spacing: var(--ls-label); text-transform: uppercase; margin-bottom: 3px; }
+.det-info-value { font-size: var(--fs-base); color: var(--c-text-2); letter-spacing: var(--ls-tight); }
+.det-info-value.accent { color: var(--c-gold); }
+
+/* Timeline */
+.det-timeline { display: flex; flex-direction: column; }
+.det-tl-item { display: flex; gap: 16px; }
+.det-tl-dot-wrap { display: flex; flex-direction: column; align-items: center; width: 18px; }
+.det-tl-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--c-gold); border: 2px solid var(--c-bg); flex-shrink: 0; margin-top: 4px;
+}
+.det-tl-dot.dim { background: var(--c-border); }
+.det-tl-line { flex: 1; width: 1px; background: var(--c-border); margin: 4px 0; min-height: 24px; }
+.det-tl-content { padding-bottom: 20px; flex: 1; }
+.det-tl-label { font-size: var(--fs-xs); color: var(--c-text-5); letter-spacing: var(--ls-label); text-transform: uppercase; margin-bottom: 3px; }
+.det-tl-value { font-size: var(--fs-sm); color: var(--c-text-3); letter-spacing: var(--ls-tight); }
+
+/* Sidebar cards */
+.det-side-card {
+  background: var(--c-bg-2); border: 1px solid var(--c-border); border-radius: var(--r-lg);
+  overflow: hidden; margin-bottom: 14px;
+}
+.det-side-card-head {
+  padding: 12px 18px; border-bottom: 1px solid var(--c-bg-3);
+  font-size: var(--fs-label); color: var(--c-text-5); letter-spacing: var(--ls-label); text-transform: uppercase;
+}
+.det-side-card-body { padding: 4px 0; }
+.det-stat-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; border-bottom: 1px solid #0d0d0d;
+}
+.det-stat-row:last-child { border-bottom: none; }
+.det-stat-key { font-size: var(--fs-sm); color: var(--c-text-5); letter-spacing: var(--ls-tight); }
+.det-stat-val { font-size: var(--fs-sm); color: var(--c-text-3); letter-spacing: var(--ls-tight); text-align: right; }
+.det-stat-val.accent { color: var(--c-gold); }
+.det-stat-val.green  { color: var(--c-green); }
+
+.det-timestamps { margin-top: 14px; }
+.det-ts-item {
+  display: flex; justify-content: space-between; padding: 6px 0;
+  font-size: var(--fs-xs); color: var(--c-text-5); letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--c-bg-3);
+}
+.det-ts-item:last-child { border-bottom: none; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .det-body { grid-template-columns: 1fr; }
+  .det-main { border-right: none; border-bottom: 1px solid var(--c-bg-3); padding: 28px 24px; }
+  .det-side { padding: 24px; position: static; }
+  .det-hero { padding: 24px; }
+}
+@media (max-width: 640px) {
+  .det-hero-top { flex-direction: column; }
+  .det-hero-right { align-items: flex-start; }
+}
