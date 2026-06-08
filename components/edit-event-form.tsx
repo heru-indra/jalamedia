@@ -1,6 +1,5 @@
 "use client";
 
-import "@/app/edit-form.css";
 import { useState, useTransition, useRef, useCallback } from "react";
 import { updateEvent } from "@/actions/event";
 import type { Event } from "@/db/schema";
@@ -23,17 +22,17 @@ function Field({ label, name, type="text", defaultValue, required, placeholder, 
 }) {
   const [focused, setFocused] = useState(false);
   const style: React.CSSProperties = {
-    width:"100%", background:"var(--c-bg-3)",
-    border:`1.5px solid ${focused?"var(--c-gold)":"var(--c-border)"}`,
-    borderRadius:"var(--r-md)", color:"var(--c-text)",
-    fontFamily:"var(--font-mono)", fontSize:"var(--fs-base)",
+    width:"100%", background:"#111",
+    border:`1.5px solid ${focused?"#d4b070":"#1e1e1e"}`,
+    borderRadius:7, color:"#f5f0e8",
+    fontFamily:"'DM Mono',monospace", fontSize:13,
     padding:"13px 16px", outline:"none",
-    transition:"border-color var(--t-fast)", caretColor:"var(--c-gold)",
+    transition:"border-color 0.15s", caretColor:"#d4b070",
     lineHeight:1.5, colorScheme:"dark" as const,
   };
   return (
     <div className="edit-field">
-      <label className={`edit-field-label${focused ? " focused" : ""}`}>{label}{required && <span style={{ color:"var(--c-gold)", marginLeft:2 }}>*</span>}</label>
+      <label className={`edit-field-label${focused ? " focused" : ""}`} style={{ color: focused ? "#d4b070" : "#777" }}>{label}{required && <span style={{ color:"#d4b070", marginLeft:2 }}>*</span>}</label>
       {rows
         ? <textarea name={name} defaultValue={defaultValue} required={required} rows={rows} placeholder={placeholder} style={{ ...style, resize:"vertical" }} onFocus={()=>setFocused(true)} onBlur={()=>setFocused(false)} />
         : <input    name={name} type={type} defaultValue={defaultValue} required={required} placeholder={placeholder} style={style} onFocus={()=>setFocused(true)} onBlur={()=>setFocused(false)} />
@@ -51,19 +50,19 @@ function EditDateRangeFields({ defaultStart, defaultEnd }: { defaultStart:string
   const [ef, setEf] = useState(false);
 
   const inp = (f:boolean, err=false): React.CSSProperties => ({
-    width:"100%", background:"var(--c-bg-3)",
-    border:`1.5px solid ${err?"var(--c-red)":f?"var(--c-gold)":"var(--c-border)"}`,
-    borderRadius:"var(--r-md)", color:"var(--c-text)",
-    fontFamily:"var(--font-mono)", fontSize:"var(--fs-base)",
+    width:"100%", background:"#111",
+    border:`1.5px solid ${err?"#e05a5a":f?"#d4b070":"#1e1e1e"}`,
+    borderRadius:7, color:"#f5f0e8",
+    fontFamily:"'DM Mono',monospace", fontSize:13,
     padding:"13px 16px", outline:"none",
-    transition:"border-color var(--t-fast)", caretColor:"var(--c-gold)", colorScheme:"dark" as const,
+    transition:"border-color 0.15s", caretColor:"#d4b070", colorScheme:"dark" as const,
   });
 
   return (
     <div>
       <div className="edit-form-grid">
         <div className="edit-field">
-          <label className={`edit-field-label${sf?" focused":""}`}>Tanggal Mulai<span style={{color:"var(--c-gold)",marginLeft:2}}>*</span></label>
+          <label className={`edit-field-label${sf?" focused":""}`} style={{ color: sf ? "#d4b070" : "#777" }}>Tanggal Mulai<span style={{color:"#d4b070",marginLeft:2}}>*</span></label>
           <input type="datetime-local" name="startDate" value={startVal} required style={inp(sf)}
             onFocus={()=>setSf(true)} onBlur={()=>setSf(false)}
             onChange={e=>{
@@ -73,7 +72,7 @@ function EditDateRangeFields({ defaultStart, defaultEnd }: { defaultStart:string
           />
         </div>
         <div className="edit-field">
-          <label className={`edit-field-label${ef?" focused":""}`}>Tanggal Selesai<span style={{color:"var(--c-gold)",marginLeft:2}}>*</span></label>
+          <label className={`edit-field-label${ef?" focused":""}`} style={{ color: ef ? "#d4b070" : "#777" }}>Tanggal Selesai<span style={{color:"#d4b070",marginLeft:2}}>*</span></label>
           <input type="datetime-local" name="endDate" value={endVal} required min={startVal||undefined} style={inp(ef,!!(dateError&&endVal&&endVal<=startVal))}
             onFocus={()=>setEf(true)} onBlur={()=>setEf(false)}
             onChange={e=>{ setEndVal(e.target.value); setDateError(e.target.value&&startVal&&e.target.value<=startVal?"Waktu selesai harus setelah waktu mulai.":null); }}

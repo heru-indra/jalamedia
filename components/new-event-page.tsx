@@ -1,6 +1,5 @@
 "use client";
 
-import "@/app/new-event.css";
 import { useState, useEffect, useRef, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -33,23 +32,23 @@ function Field({
   hint?: string; rows?: number; prefix?: string;
 }) {
   const [focused, setFocused] = useState(false);
-  const bc  = focused ? "#c9a060" : "#1e1e1e";
+  const bc  = focused ? "#d4b070" : "#1e1e1e";
   const base: React.CSSProperties = {
-    width: "100%", background: "#141414",
+    width: "100%", background: "#111",
     border: `1.5px solid ${bc}`, borderRadius: 7,
-    color: "#f0e8d8", fontFamily: "'DM Mono',monospace",
+    color: "#f5f0e8", fontFamily: "'DM Mono',monospace",
     fontSize: 13, padding: prefix ? "11px 14px 11px 34px" : "11px 14px",
-    outline: "none", transition: "border-color 0.15s", caretColor: "#c9a060",
+    outline: "none", transition: "border-color 0.15s", caretColor: "#d4b070",
   };
 
   return (
     <div>
-      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#c9a060":"#555", transition:"color 0.15s" }}>
+      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#d4b070":"#777", transition:"color 0.15s" }}>
         {icon && <span style={{ opacity:0.7, display:"flex" }}>{icon}</span>}
-        {label}{required && <span style={{ color:"#c9a060", marginLeft:2, fontSize:14 }}>*</span>}
+        {label}{required && <span style={{ color:"#d4b070", marginLeft:2, fontSize:14 }}>*</span>}
       </label>
       <div style={{ position:"relative" }}>
-        {prefix && <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:13, color:"#555", pointerEvents:"none" }}>{prefix}</span>}
+        {prefix && <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:13, color:"#777", pointerEvents:"none" }}>{prefix}</span>}
         {rows
           ? <textarea
               name={name} value={value} required={required} rows={rows}
@@ -65,7 +64,7 @@ function Field({
             />
         }
       </div>
-      {hint && <div style={{ marginTop:6, fontSize:"var(--fs-xs)", color:"var(--c-text-5)", letterSpacing:"var(--ls-tight)", lineHeight:1.65, fontFamily:"var(--font-mono)" }}>{hint}</div>}
+      {hint && <div style={{ marginTop:6, fontSize:11, color:"#444", letterSpacing:"0.03em", lineHeight:1.65, fontFamily:"'DM Mono',monospace" }}>{hint}</div>}
     </div>
   );
 }
@@ -85,26 +84,26 @@ function LocationField({ value, onChange }: { value: string; onChange: (v: strin
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [value]);
 
-  const bc = focused ? "#c9a060" : "#1e1e1e";
+  const bc = focused ? "#d4b070" : "#1e1e1e";
   const mapSrc = mapQuery
     ? `https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed&z=15&hl=id`
     : null;
 
   return (
     <div>
-      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#c9a060":"#555", transition:"color 0.15s" }}>
+      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#d4b070":"#777", transition:"color 0.15s" }}>
         <span style={{ opacity:0.7, display:"flex" }}><IconMapPin /></span>
-        Lokasi<span style={{ color:"#c9a060", marginLeft:2, fontSize:14 }}>*</span>
+        Lokasi<span style={{ color:"#d4b070", marginLeft:2, fontSize:14 }}>*</span>
       </label>
       <input
         name="location" type="text" value={value} required
         placeholder="Contoh: Jakarta Convention Center, Hall A"
-        style={{ width:"100%", background:"#141414", border:`1.5px solid ${bc}`, borderRadius:7, color:"#f0e8d8", fontFamily:"'DM Mono',monospace", fontSize:"var(--fs-base)", padding:"13px 16px", outline:"none", transition:"border-color 0.15s", caretColor:"var(--c-gold)" }}
+        style={{ width:"100%", background:"#111", border:`1.5px solid ${bc}`, borderRadius:7, color:"#f5f0e8", fontFamily:"'DM Mono',monospace", fontSize:13, padding:"13px 16px", outline:"none", transition:"border-color 0.15s", caretColor:"#d4b070" }}
         onChange={e => onChange(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      <div style={{ marginTop:5, fontSize:11, color:"#3a3a3a", letterSpacing:"0.03em", lineHeight:1.6, fontFamily:"'DM Mono',monospace" }}>
+      <div style={{ marginTop:5, fontSize:11, color:"#444", letterSpacing:"0.03em", lineHeight:1.6, fontFamily:"'DM Mono',monospace" }}>
         Nama venue, gedung, atau alamat lengkap
       </div>
 
@@ -113,7 +112,7 @@ function LocationField({ value, onChange }: { value: string; onChange: (v: strin
         marginTop: 12,
         borderRadius: 8, overflow: "hidden",
         border: "1px solid #1e1e1e",
-        background: "#141414",
+        background: "#111",
         transition: "all 0.3s ease",
       }}>
         {mapSrc ? (
@@ -133,7 +132,7 @@ function LocationField({ value, onChange }: { value: string; onChange: (v: strin
             alignItems: "center", justifyContent: "center", gap: 8,
           }}>
             <span style={{ fontSize: 28 }}>🗺</span>
-            <span style={{ fontSize: "var(--fs-sm)", color: "var(--c-text-5)", letterSpacing: "var(--ls-normal)", fontFamily: "var(--font-mono)" }}>
+            <span style={{ fontSize: 11, color: "#444", letterSpacing: "0.06em", fontFamily: "'DM Mono',monospace" }}>
               {value.length < 3 ? "Ketik lokasi untuk melihat peta" : "Menampilkan peta..."}
             </span>
           </div>
@@ -159,7 +158,7 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
 
   return (
     <div>
-      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#c9a060":"#555", transition:"color 0.15s" }}>
+      <label style={{ display:"flex", alignItems:"center", gap:7, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8, fontFamily:"'DM Mono',monospace", color: focused ? "#d4b070":"#777", transition:"color 0.15s" }}>
         <span style={{ opacity:0.7, display:"flex" }}><IconTag /></span>
         Kategori
       </label>
@@ -167,12 +166,12 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
         name="categoryId" value={value} disabled={loading}
         onChange={e => onChange(e.target.value)}
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-        style={{ width:"100%", background:"#141414", border:`1.5px solid ${focused?"#c9a060":"#1e1e1e"}`, borderRadius:7, color: value?"#f0e8d8":"#555", fontFamily:"'DM Mono',monospace", fontSize:"var(--fs-base)", padding:"13px 36px 13px 16px", outline:"none", transition:"border-color 0.15s", cursor:loading?"wait":"pointer", appearance:"none", backgroundImage:`url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23555' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")`, backgroundRepeat:"no-repeat", backgroundPosition:"right 14px center" }}
+        style={{ width:"100%", background:"#111", border:`1.5px solid ${focused?"#d4b070":"#1e1e1e"}`, borderRadius:7, color: value?"#f5f0e8":"#777", fontFamily:"'DM Mono',monospace", fontSize:13, padding:"13px 36px 13px 16px", outline:"none", transition:"border-color 0.15s", cursor:loading?"wait":"pointer", appearance:"none", backgroundImage:`url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23777' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")`, backgroundRepeat:"no-repeat", backgroundPosition:"right 14px center" }}
       >
         <option value="">{loading ? "Memuat kategori..." : "Pilih kategori (opsional)"}</option>
         {cats.map(c => <option key={c.id} value={c.id}>{c.emoji}  {c.name}</option>)}
       </select>
-      <div style={{ marginTop:5, fontSize:11, color:"#3a3a3a", letterSpacing:"0.03em", fontFamily:"'DM Mono',monospace" }}>
+      <div style={{ marginTop:5, fontSize:11, color:"#444", letterSpacing:"0.03em", fontFamily:"'DM Mono',monospace" }}>
         Membantu peserta menemukan event Anda lebih mudah
       </div>
     </div>
@@ -209,17 +208,17 @@ function DateRangeFields({
   }, [startVal, setEndVal]);
 
   const inp = (f: boolean, err = false): React.CSSProperties => ({
-    width:"100%", background:"#141414",
-    border:`1.5px solid ${err?"#e05a5a":f?"#c9a060":"#1e1e1e"}`,
-    borderRadius:7, color:"#f0e8d8", fontFamily:"'DM Mono',monospace",
+    width:"100%", background:"#111",
+    border:`1.5px solid ${err?"#e05a5a":f?"#d4b070":"#1e1e1e"}`,
+    borderRadius:7, color:"#f5f0e8", fontFamily:"'DM Mono',monospace",
     fontSize:13, padding:"11px 14px", outline:"none",
-    transition:"border-color 0.15s", caretColor:"#c9a060", colorScheme:"dark" as const,
+    transition:"border-color 0.15s", caretColor:"#d4b070", colorScheme:"dark" as const,
   });
   const lbl = (f: boolean): React.CSSProperties => ({
     display:"flex", alignItems:"center", gap:7,
     fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase",
     marginBottom:8, fontFamily:"'DM Mono',monospace",
-    color:f?"#c9a060":"#555", transition:"color 0.15s",
+    color:f?"#d4b070":"#777", transition:"color 0.15s",
   });
 
   return (
@@ -228,7 +227,7 @@ function DateRangeFields({
         <div>
           <label style={lbl(startFocus)}>
             <span style={{ opacity:0.7, display:"flex" }}><IconCalendar /></span>
-            Tanggal &amp; Waktu Mulai<span style={{ color:"#c9a060", marginLeft:2, fontSize:14 }}>*</span>
+            Tanggal &amp; Waktu Mulai<span style={{ color:"#d4b070", marginLeft:2, fontSize:14 }}>*</span>
           </label>
           <input
             name="startDate" type="datetime-local" required
@@ -240,7 +239,7 @@ function DateRangeFields({
         <div>
           <label style={lbl(endFocus)}>
             <span style={{ opacity:0.7, display:"flex" }}><IconCalendar /></span>
-            Tanggal &amp; Waktu Selesai<span style={{ color:"#c9a060", marginLeft:2, fontSize:14 }}>*</span>
+            Tanggal &amp; Waktu Selesai<span style={{ color:"#d4b070", marginLeft:2, fontSize:14 }}>*</span>
           </label>
           <input
             ref={endRef} name="endDate" type="datetime-local" required
@@ -252,7 +251,7 @@ function DateRangeFields({
         </div>
       </div>
       {dateError && (
-        <div style={{ marginTop:8, display:"flex", alignItems:"flex-start", gap:8, fontSize:11, color:"#e09040", background:"rgba(224,144,64,0.07)", border:"1px solid rgba(224,144,64,0.2)", borderRadius:5, padding:"8px 12px", lineHeight:1.6 }}>
+        <div style={{ marginTop:8, display:"flex", alignItems:"flex-start", gap:8, fontSize:11, color:"#e09040", background:"rgba(224,144,64,0.08)", border:"1px solid rgba(224,144,64,0.25)", borderRadius:5, padding:"8px 12px", lineHeight:1.6 }}>
           <span style={{ flexShrink:0 }}>⚠</span><span>{dateError}</span>
         </div>
       )}
@@ -265,10 +264,10 @@ function DateRangeFields({
 function SectionHeader({ num, title, desc }: { num: string; title: string; desc: string }) {
   return (
     <div style={{ display:"flex", alignItems:"flex-start", gap:16, marginBottom:28, paddingBottom:20, borderBottom:"1px solid #1e1e1e" }}>
-      <div style={{ width:36, height:36, borderRadius:8, background:"rgba(201,160,96,0.1)", border:"1px solid rgba(201,160,96,0.25)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:18, fontWeight:300, color:"#c9a060", flexShrink:0 }}>{num}</div>
+      <div style={{ width:36, height:36, borderRadius:8, background:"rgba(212,176,112,0.12)", border:"1px solid rgba(212,176,112,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:18, fontWeight:300, color:"#d4b070", flexShrink:0 }}>{num}</div>
       <div>
-        <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:"#f0e8d8", marginBottom:4 }}>{title}</div>
-        <div style={{ fontSize:12, color:"#555", letterSpacing:"0.04em", fontFamily:"'DM Mono',monospace" }}>{desc}</div>
+        <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:"#f5f0e8", marginBottom:4 }}>{title}</div>
+        <div style={{ fontSize:12, color:"#777", letterSpacing:"0.04em", fontFamily:"'DM Mono',monospace" }}>{desc}</div>
       </div>
     </div>
   );

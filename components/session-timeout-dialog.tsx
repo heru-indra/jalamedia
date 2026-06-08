@@ -114,180 +114,82 @@ export function SessionTimeoutDialog() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=DM+Mono:wght@300;400&display=swap');
-
-        .sto-overlay {
-          position: fixed; inset: 0; z-index: 9999;
-          background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          display: flex; align-items: center; justify-content: center;
-          padding: 24px;
-          font-family: 'DM Mono', monospace;
-          animation: stoFade .2s ease;
-        }
-        @keyframes stoFade { from { opacity: 0 } to { opacity: 1 } }
-
-        .sto-card {
-          background: #111;
-          border: 1px solid #252525;
-          border-radius: 16px;
-          padding: 44px 40px 36px;
-          width: 100%; max-width: 400px;
-          text-align: center;
-          position: relative; overflow: hidden;
-          box-shadow: 0 40px 100px rgba(0,0,0,0.75);
-          animation: stoUp .28s cubic-bezier(.34,1.56,.64,1);
-        }
-        @keyframes stoUp {
-          from { opacity: 0; transform: translateY(20px) scale(.96) }
-          to   { opacity: 1; transform: translateY(0)    scale(1)   }
-        }
-        .sto-card::before {
-          content: '';
-          position: absolute; top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(to right, transparent, var(--ring, #c9a060), transparent);
-        }
-
-        .sto-ring-wrap {
-          position: relative; width: 132px; height: 132px;
-          margin: 0 auto 28px;
-        }
-        .sto-ring-wrap.pulse { animation: stoPulse 1.1s ease infinite; }
-        @keyframes stoPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
-
-        .sto-ring-svg {
-          width: 132px; height: 132px;
-          transform: rotate(-90deg); display: block;
-        }
-        .sto-ring-bar {
-          fill: none; stroke-width: 6; stroke-linecap: round;
-          transition: stroke-dashoffset .95s linear, stroke .5s ease;
-        }
-
-        .sto-ring-center {
-          position: absolute; inset: 0;
-          display: flex; flex-direction: column;
-          align-items: center; justify-content: center; gap: 3px;
-        }
-        .sto-ring-time {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 32px; font-weight: 300; line-height: 1;
-          letter-spacing: -0.02em; transition: color .5s;
-        }
-        .sto-ring-sub {
-          font-size: 9px; color: #3a3a3a;
-          letter-spacing: 0.16em; text-transform: uppercase;
-        }
-
-        .sto-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 28px; font-weight: 300;
-          color: #f0e8d8; line-height: 1.2; margin-bottom: 12px;
-        }
-        .sto-desc {
-          font-size: 13px; color: #555;
-          line-height: 1.8; letter-spacing: 0.03em; margin-bottom: 32px;
-        }
-        .sto-desc b { color: #888; font-weight: 400; }
-
-        .sto-btns { display: flex; flex-direction: column; gap: 10px; }
-
-        .sto-btn-stay {
-          width: 100%; padding: 15px;
-          background: #c9a060; border: none; border-radius: 8px;
-          color: #0d0d0d; font-family: 'DM Mono', monospace;
-          font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 9px;
-          transition: background .15s, transform .1s;
-        }
-        .sto-btn-stay:hover:not(:disabled) { background: #d4b070; }
-        .sto-btn-stay:active:not(:disabled) { transform: scale(.98); }
-        .sto-btn-stay:disabled { background: #1e1e1e; color: #333; cursor: not-allowed; }
-
-        .sto-btn-logout {
-          width: 100%; padding: 13px;
-          background: transparent; border: 1px solid #1e1e1e; border-radius: 8px;
-          color: #3a3a3a; font-family: 'DM Mono', monospace;
-          font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 9px;
-          transition: border-color .15s, color .15s;
-        }
-        .sto-btn-logout:hover:not(:disabled) { border-color: #e05a5a; color: #e05a5a; }
-        .sto-btn-logout:disabled { opacity: 0.35; cursor: not-allowed; }
-
-        .sto-spinner {
-          width: 14px; height: 14px; border-radius: 50%;
-          flex-shrink: 0; animation: stoSpin .65s linear infinite;
-          border: 2px solid transparent;
-        }
-        .sto-spinner.dk { border-top-color: #0d0d0d; border-right-color: rgba(0,0,0,.15); }
-        .sto-spinner.lt { border-top-color: #c9a060; border-right-color: rgba(201,160,96,.15); }
-        @keyframes stoSpin { to { transform: rotate(360deg) } }
-      `}</style>
-
       <div
-        className="sto-overlay"
+        className="fixed inset-0 z-[9999] bg-[rgba(0,0,0,0.8)] backdrop-blur-lg flex items-center justify-center p-6"
         role="dialog"
         aria-modal="true"
         aria-label="Peringatan: sesi akan berakhir"
-        style={{ "--ring": ringColor } as React.CSSProperties}
       >
-        <div className="sto-card">
-          {/* ── Ring countdown ── */}
-          <div className={`sto-ring-wrap ${countdown <= 30 ? "pulse" : ""}`}>
-            <svg className="sto-ring-svg" viewBox="0 0 132 132">
+        <div className="relative bg-[#111] border border-[#2a2a2a] rounded-2xl px-10 py-11 w-full max-w-sm text-center overflow-hidden shadow-2xl animate-fade-up">
+          {/* Top border accent */}
+          <div
+            className="absolute top-0 left-0 right-0 h-0.5"
+            style={{
+              background: `linear-gradient(to right, transparent, ${ringColor}, transparent)`,
+            }}
+          />
+
+          {/* Ring countdown */}
+          <div className={`relative w-32 h-32 mx-auto mb-7 ${countdown <= 30 ? "animate-pulse-dot" : ""}`}>
+            <svg className="w-full h-full" viewBox="0 0 132 132" style={{ transform: "rotate(-90deg)" }} preserveAspectRatio="xMidYMid meet">
               <circle cx="66" cy="66" r={RING_R} fill="none" stroke="#1e1e1e" strokeWidth="6" />
               <circle
                 cx="66" cy="66" r={RING_R}
-                className="sto-ring-bar"
-                stroke={ringColor}
+                fill="none" stroke={ringColor} strokeWidth="6" strokeLinecap="round"
                 strokeDasharray={RING_C}
                 strokeDashoffset={dashOffset}
+                style={{
+                  transition: "stroke-dashoffset 0.95s linear, stroke 0.5s ease",
+                }}
               />
             </svg>
-            <div className="sto-ring-center">
-              <span className="sto-ring-time" style={{ color: ringColor }}>
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+              <span className="font-serif text-4xl font-light leading-none" style={{ color: ringColor, letterSpacing: "-0.02em" }}>
                 {fmtTime(countdown)}
               </span>
-              <span className="sto-ring-sub">tersisa</span>
+              <span className="text-xs text-[#444] tracking-widest uppercase">tersisa</span>
             </div>
           </div>
 
-          {/* ── Copy ── */}
-          <h2 className="sto-title">Sesi akan berakhir</h2>
-          <p className="sto-desc">
-            Tidak ada aktivitas selama <b>{Math.round(IDLE_MS / 60000)} menit</b>.<br />
+          {/* Copy */}
+          <h2 className="font-serif text-3xl font-light text-[#f5f0e8] leading-tight mb-3">Sesi akan berakhir</h2>
+          <p className="text-sm text-[#777] leading-relaxed tracking-tight mb-8">
+            Tidak ada aktivitas selama <span className="text-[#aaa] font-semibold">{Math.round(IDLE_MS / 60000)} menit</span>.<br />
             Sesi otomatis berakhir dalam{" "}
-            <b style={{ color: ringColor }}>{fmtTime(countdown)}</b>.
+            <span className="font-semibold" style={{ color: ringColor }}>{fmtTime(countdown)}</span>.
           </p>
 
-          {/* ── Actions ── */}
-          <div className="sto-btns">
+          {/* Actions */}
+          <div className="flex flex-col gap-2.5">
             <button
-              className="sto-btn-stay"
+              className="w-full px-4 py-3.5 bg-[#d4b070] text-[#0a0a0a] rounded-lg text-xs font-mono tracking-widest uppercase font-semibold transition-colors hover:bg-[#e0bb80] disabled:bg-[#1e1e1e] disabled:text-[#444] disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
               onClick={handleStay}
               disabled={loggingOut}
               autoFocus
             >
-              {loggingOut
-                ? <><span className="sto-spinner dk" />Mengakhiri...</>
-                : "✓  Ya, tetap masuk"
-              }
+              {loggingOut ? (
+                <>
+                  <span className="w-3 h-3 border-2 border-[#0a0a0a] border-t-transparent rounded-full animate-spin" />
+                  Mengakhiri...
+                </>
+              ) : (
+                "✓  Ya, tetap masuk"
+              )}
             </button>
 
             <button
-              className="sto-btn-logout"
+              className="w-full px-4 py-3 bg-transparent border border-[#1e1e1e] rounded-lg text-xs font-mono text-[#777] tracking-widest uppercase transition-colors hover:border-[#e05a5a] hover:text-[#e05a5a] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
               onClick={handleLogout}
               disabled={loggingOut}
             >
-              {loggingOut
-                ? <><span className="sto-spinner lt" />Keluar...</>
-                : "Keluar sekarang"
-              }
+              {loggingOut ? (
+                <>
+                  <span className="w-3 h-3 border-2 border-[#d4b070] border-t-transparent rounded-full animate-spin" />
+                  Keluar...
+                </>
+              ) : (
+                "Keluar sekarang"
+              )}
             </button>
           </div>
         </div>

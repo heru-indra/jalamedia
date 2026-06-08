@@ -1,5 +1,4 @@
 // src/app/(dashboard)/events/page.tsx
-import "@/app/dashboard.css";
 import Link from "next/link";
 import { requireAuth } from "@/lib/auth-helper";
 import { db } from "@/db";
