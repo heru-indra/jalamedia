@@ -245,236 +245,136 @@ export function EditEventForm({ event }: { event: Event }) {
   }
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
-
-        .edit-form textarea::placeholder,
-        .edit-form input::placeholder { color: #222; }
-
-        .edit-form input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-          filter: invert(0.3);
-          cursor: pointer;
-        }
-
-        .edit-form-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0 20px;
-        }
-
-        .edit-form-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-top: 4px;
-          padding-top: 20px;
-          border-top: 1px solid #111;
-        }
-        .edit-btn-save {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          padding: 10px 20px;
-          background: #b48c50;
-          border: none;
-          border-radius: 4px;
-          color: #0a0a0a;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: background 0.15s;
-        }
-        .edit-btn-save:hover:not(:disabled) { background: #c9a060; }
-        .edit-btn-save:disabled { background: #2a2a2a; color: #444; cursor: not-allowed; }
-        .edit-btn-save.saved { background: rgba(90,136,48,0.2); color: #5a8830; border: 1px solid rgba(90,136,48,0.3); }
-
-        .edit-btn-reset {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          padding: 10px 14px;
-          background: transparent;
-          border: 1px solid #1a1a1a;
-          border-radius: 4px;
-          color: #333;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: border-color 0.15s, color 0.15s;
-        }
-        .edit-btn-reset:hover { border-color: #2e2e2e; color: #666; }
-
-        .edit-error {
-          background: rgba(180,50,50,0.08);
-          border: 1px solid rgba(180,50,50,0.2);
-          border-radius: 4px;
-          padding: 10px 14px;
-          font-size: 10px;
-          color: #c0605a;
-          letter-spacing: 0.04em;
-          margin-bottom: 16px;
-          font-family: 'DM Mono', monospace;
-          line-height: 1.6;
-        }
-        .edit-success {
-          background: rgba(90,136,48,0.08);
-          border: 1px solid rgba(90,136,48,0.2);
-          border-radius: 4px;
-          padding: 10px 14px;
-          font-size: 10px;
-          color: #5a8830;
-          letter-spacing: 0.04em;
-          margin-bottom: 16px;
-          font-family: 'DM Mono', monospace;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .spin { animation: spinAnim 0.6s linear infinite; display: inline-flex; }
-        @keyframes spinAnim { to { transform: rotate(360deg); } }
-
-        @media (max-width: 640px) {
-          .edit-form-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
-
-      <form
-        ref={formRef}
-        className="edit-form"
-        onSubmit={handleSubmit}
-        noValidate
-      >
-        {error   && <div className="edit-error">{error}</div>}
-        {success && (
-          <div className="edit-success">
-            <IconCheck /> Perubahan berhasil disimpan.
-          </div>
-        )}
-
-        {/* Title */}
-        <Field
-          label="Judul Event"
-          name="title"
-          defaultValue={event.title}
-          required
-          placeholder="Nama event Anda"
-        />
-
-        {/* Description */}
-        <Field
-          label="Deskripsi"
-          name="description"
-          defaultValue={event.description}
-          required
-          rows={5}
-          placeholder="Ceritakan detail event Anda..."
-        />
-
-        {/* Location */}
-        <Field
-          label="Lokasi"
-          name="location"
-          defaultValue={event.location}
-          required
-          placeholder="Nama venue atau alamat"
-        />
-
-        {/* Date grid — saling terhubung, endDate tidak bisa sebelum startDate */}
-        <EditDateRangeFields
-          defaultStart={toDatetimeLocal(new Date(event.startDate))}
-          defaultEnd={toDatetimeLocal(new Date(event.endDate))}
-        />
-
-        {/* Capacity & price grid */}
-        <div className="edit-form-grid">
-          <Field
-            label="Kapasitas (opsional)"
-            name="capacity"
-            type="number"
-            defaultValue={event.capacity ?? undefined}
-            placeholder="Jumlah peserta"
-          />
-          <Field
-            label="Harga Tiket (Rp)"
-            name="ticketPrice"
-            type="number"
-            defaultValue={Number(event.ticketPrice) || undefined}
-            placeholder="0 = Gratis"
-          />
+    <form
+      ref={formRef}
+      className="flex flex-col gap-0"
+      onSubmit={handleSubmit}
+      noValidate
+    >
+      {error   && <div className="mb-4 rounded border border-[rgba(180,50,50,0.2)] bg-[rgba(180,50,50,0.08)] px-3 py-2 text-xs text-[#c0605a] tracking-tight font-mono leading-relaxed">{error}</div>}
+      {success && (
+        <div className="mb-4 flex items-center gap-2 rounded border border-[rgba(90,136,48,0.2)] bg-[rgba(90,136,48,0.08)] px-3 py-2 text-xs text-[#5a8830] tracking-tight font-mono">
+          <IconCheck /> Perubahan berhasil disimpan.
         </div>
+      )}
 
-        {/* ── Images ── */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{
-            fontSize: 9, color: "#444", letterSpacing: "0.16em", textTransform: "uppercase",
-            marginBottom: 16, fontFamily: "'DM Mono', monospace",
-            paddingBottom: 10, borderBottom: "1px solid #1a1a1a",
-          }}>
-            Gambar Event
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      {/* Title */}
+      <Field
+        label="Judul Event"
+        name="title"
+        defaultValue={event.title}
+        required
+        placeholder="Nama event Anda"
+      />
+
+      {/* Description */}
+      <Field
+        label="Deskripsi"
+        name="description"
+        defaultValue={event.description}
+        required
+        rows={5}
+        placeholder="Ceritakan detail event Anda..."
+      />
+
+      {/* Location */}
+      <Field
+        label="Lokasi"
+        name="location"
+        defaultValue={event.location}
+        required
+        placeholder="Nama venue atau alamat"
+      />
+
+      {/* Date grid — saling terhubung, endDate tidak bisa sebelum startDate */}
+      <EditDateRangeFields
+        defaultStart={toDatetimeLocal(new Date(event.startDate))}
+        defaultEnd={toDatetimeLocal(new Date(event.endDate))}
+      />
+
+      {/* Capacity & price grid */}
+      <div className="grid grid-cols-2 gap-5 mb-4">
+        <Field
+          label="Kapasitas (opsional)"
+          name="capacity"
+          type="number"
+          defaultValue={event.capacity ?? undefined}
+          placeholder="Jumlah peserta"
+        />
+        <Field
+          label="Harga Tiket (Rp)"
+          name="ticketPrice"
+          type="number"
+          defaultValue={Number(event.ticketPrice) || undefined}
+          placeholder="0 = Gratis"
+        />
+      </div>
+
+      {/* ── Images ── */}
+      <div className="mb-5">
+        <div className="text-xs font-mono text-[#444] tracking-widest uppercase mb-4 pb-2.5 border-b border-[#1a1a1a]">
+          Gambar Event
+        </div>
+        <div className="flex flex-col gap-5">
+          <SingleImageUpload
+            type="cover"
+            name="coverImage"
+            label="Cover / Banner"
+            hint="Rasio 16:9 · maks 5 MB"
+            defaultUrl={event.coverImage ?? undefined}
+            aspectRatio="16/9"
+          />
+          <GalleryUpload
+            name="galleryImages"
+            defaultUrls={
+              event.galleryImages
+                ? (() => { try { return JSON.parse(event.galleryImages); } catch { return []; } })()
+                : []
+            }
+            maxImages={8}
+          />
+          <div className="flex items-start gap-4">
             <SingleImageUpload
-              type="cover"
-              name="coverImage"
-              label="Cover / Banner"
-              hint="Rasio 16:9 · maks 5 MB"
-              defaultUrl={event.coverImage ?? undefined}
-              aspectRatio="16/9"
+              type="logo"
+              name="organizerLogo"
+              label="Logo Organizer"
+              hint="Maks 2 MB"
+              aspectRatio="1/1"
+              maxSizeMB={2}
             />
-            <GalleryUpload
-              name="galleryImages"
-              defaultUrls={
-                event.galleryImages
-                  ? (() => { try { return JSON.parse(event.galleryImages); } catch { return []; } })()
-                  : []
-              }
-              maxImages={8}
-            />
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-              <SingleImageUpload
-                type="logo"
-                name="organizerLogo"
-                label="Logo Organizer"
-                hint="Maks 2 MB"
-                aspectRatio="1/1"
-                maxSizeMB={2}
-              />
-            </div>
           </div>
         </div>
+      </div>
 
-        {/* Actions */}
-        <div className="edit-form-actions">
-          <button
-            type="submit"
-            className={`edit-btn-save ${success ? "saved" : ""}`}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <span className="spin"><IconSpinner /></span>
-            ) : success ? (
-              <IconCheck />
-            ) : null}
-            {isPending ? "Menyimpan..." : success ? "Tersimpan" : "Simpan Perubahan"}
-          </button>
+      {/* Actions */}
+      <div className="flex items-center gap-2.5 mt-1 pt-5 border-t border-[#0d0d0d]">
+        <button
+          type="submit"
+          className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded text-xs font-mono tracking-widest uppercase transition-colors ${
+            success 
+              ? "bg-[rgba(90,136,48,0.15)] text-[#5a8830] border border-[rgba(90,136,48,0.3)]" 
+              : "bg-[#b48c50] text-[#0a0a0a] hover:bg-[#c9a060] disabled:bg-[#2a2a2a] disabled:text-[#444]"
+          }`}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <span className="inline-flex animate-spin"><IconSpinner /></span>
+          ) : success ? (
+            <IconCheck />
+          ) : null}
+          {isPending ? "Menyimpan..." : success ? "Tersimpan" : "Simpan Perubahan"}
+        </button>
 
-          <button
-            type="button"
-            className="edit-btn-reset"
-            onClick={handleReset}
-            disabled={isPending}
-          >
-            <IconReset />
-            Reset
-          </button>
-        </div>
-      </form>
-    </>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 px-3 py-2.5 border border-[#1a1a1a] rounded text-xs font-mono text-[#333] tracking-widest uppercase transition-colors hover:border-[#2e2e2e] hover:text-[#666] disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleReset}
+          disabled={isPending}
+        >
+          <IconReset />
+          Reset
+        </button>
+      </div>
+    </form>
   );
 }

@@ -246,345 +246,51 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
-
-        .det-page {
-          min-height: 100%;
-          background: #0a0a0a;
-          font-family: 'DM Mono', monospace;
-        }
-
-        /* ── Hero banner ── */
-        .det-hero {
-          position: relative;
-          background: #0f0f0f;
-          border-bottom: 1px solid #1a1a1a;
-          padding: 36px 44px 32px;
-          overflow: hidden;
-        }
-        .det-hero::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(ellipse 50% 80% at 80% 50%, rgba(180,140,80,0.05) 0%, transparent 70%),
-            radial-gradient(ellipse 30% 60% at 10% 80%, rgba(180,140,80,0.03) 0%, transparent 70%);
-          pointer-events: none;
-        }
-
-        .det-breadcrumb {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 24px;
-          font-size: 10px;
-          color: #333;
-          letter-spacing: 0.08em;
-        }
-        .det-breadcrumb a {
-          color: #333;
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          transition: color 0.15s;
-        }
-        .det-breadcrumb a:hover { color: #b48c50; }
-        .det-breadcrumb-sep { color: #1e1e1e; }
-
-        .det-hero-top {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 20px;
-        }
-        .det-hero-left { flex: 1; min-width: 0; }
-
-        .det-event-label {
-          font-size: 9px;
-          color: #333;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          margin-bottom: 10px;
-        }
-        .det-event-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(26px, 3vw, 40px);
-          font-weight: 300;
-          color: #e8e0d0;
-          letter-spacing: -0.01em;
-          line-height: 1.15;
-          margin-bottom: 16px;
-        }
-        .det-event-title em {
-          font-style: italic;
-          color: #b48c50;
-        }
-
-        .det-hero-chips {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-        .det-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 10px;
-          color: #444;
-          letter-spacing: 0.06em;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid #1a1a1a;
-          border-radius: 4px;
-          padding: 5px 10px;
-        }
-
-        .det-hero-right {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 12px;
-          flex-shrink: 0;
-        }
-
-        /* upcoming badge */
-        .det-upcoming {
-          font-size: 9px;
-          color: #5a8830;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          padding: 4px 10px;
-          border: 1px solid rgba(90,136,48,0.25);
-          border-radius: 3px;
-          background: rgba(90,136,48,0.06);
-        }
-
-        /* ── Body ── */
-        .det-body {
-          display: grid;
-          grid-template-columns: 1fr 320px;
-          gap: 0;
-          align-items: start;
-        }
-
-        /* ── Main column ── */
-        .det-main {
-          padding: 36px 44px;
-          border-right: 1px solid #111;
-        }
-
-        .det-section {
-          margin-bottom: 36px;
-        }
-        .det-section-title {
-          font-size: 9px;
-          color: #2e2e2e;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          margin-bottom: 16px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .det-section-title::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: #111;
-        }
-
-        .det-description {
-          font-size: 12px;
-          color: #666;
-          line-height: 2;
-          letter-spacing: 0.04em;
-          white-space: pre-wrap;
-        }
-
-        /* Edit form toggle */
-        .det-edit-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          padding: 9px 16px;
-          background: transparent;
-          border: 1px solid #1e1e1e;
-          border-radius: 4px;
-          color: #444;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: border-color 0.15s, color 0.15s;
-          margin-top: 20px;
-          text-decoration: none;
-        }
-        .det-edit-toggle:hover { border-color: #b48c50; color: #b48c50; }
-
-        /* Timeline */
-        .det-timeline { display: flex; flex-direction: column; gap: 0; }
-        .det-tl-item {
-          display: flex;
-          gap: 14px;
-          padding-bottom: 20px;
-          position: relative;
-        }
-        .det-tl-item:last-child { padding-bottom: 0; }
-        .det-tl-item:last-child .det-tl-line { display: none; }
-        .det-tl-dot-wrap {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          flex-shrink: 0;
-        }
-        .det-tl-dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          border: 1px solid #b48c50;
-          background: #0a0a0a;
-          flex-shrink: 0;
-          margin-top: 2px;
-        }
-        .det-tl-dot.dim {
-          border-color: #222;
-        }
-        .det-tl-line {
-          width: 1px;
-          flex: 1;
-          background: #111;
-          margin-top: 4px;
-        }
-        .det-tl-content { flex: 1; }
-        .det-tl-label {
-          font-size: 9px;
-          color: #333;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          margin-bottom: 4px;
-        }
-        .det-tl-value {
-          font-size: 12px;
-          color: #888;
-          letter-spacing: 0.03em;
-        }
-
-        /* ── Sidebar ── */
-        .det-side {
-          padding: 36px 28px;
-          position: sticky;
-          top: 0;
-        }
-
-        .det-side-card {
-          background: #0f0f0f;
-          border: 1px solid #1a1a1a;
-          border-radius: 8px;
-          overflow: hidden;
-          margin-bottom: 14px;
-        }
-        .det-side-card-head {
-          padding: 14px 18px;
-          border-bottom: 1px solid #111;
-          font-size: 9px;
-          color: #2e2e2e;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-        }
-        .det-side-card-body { padding: 4px 0; }
-
-        /* Stat rows in sidebar */
-        .det-stat-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 11px 18px;
-          border-bottom: 1px solid #0d0d0d;
-        }
-        .det-stat-row:last-child { border-bottom: none; }
-        .det-stat-key {
-          font-size: 10px;
-          color: #333;
-          letter-spacing: 0.06em;
-        }
-        .det-stat-val {
-          font-size: 11px;
-          color: #888;
-          letter-spacing: 0.04em;
-          text-align: right;
-        }
-        .det-stat-val.accent { color: #b48c50; }
-        .det-stat-val.green  { color: #5a8830; }
-
-        /* Timestamp footer */
-        .det-timestamps {
-          margin-top: 16px;
-          padding: 0 4px;
-        }
-        .det-ts-item {
-          display: flex;
-          justify-content: space-between;
-          padding: 6px 0;
-          font-size: 9px;
-          color: #222;
-          letter-spacing: 0.06em;
-          border-bottom: 1px solid #0d0d0d;
-        }
-        .det-ts-item:last-child { border-bottom: none; }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-          .det-body { grid-template-columns: 1fr; }
-          .det-main { border-right: none; border-bottom: 1px solid #111; padding: 28px 24px; }
-          .det-side { padding: 24px; position: static; }
-          .det-hero { padding: 24px; }
-        }
-        @media (max-width: 640px) {
-          .det-hero-top { flex-direction: column; }
-          .det-hero-right { align-items: flex-start; }
-        }
-      `}</style>
-
-      <div className="det-page">
+      <div className="min-h-screen bg-[#0a0a0a] font-mono">
         {/* ── Hero ── */}
-        <div className="det-hero">
+        <div className="relative border-b border-[#0d0d0d] bg-[#0f0f0f] px-11 py-8 overflow-hidden">
+          {/* Gradient background */}
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `
+              radial-gradient(ellipse 50% 80% at 80% 50%, rgba(180,140,80,0.05) 0%, transparent 70%),
+              radial-gradient(ellipse 30% 60% at 10% 80%, rgba(180,140,80,0.03) 0%, transparent 70%)
+            `,
+          }} />
+
           {/* Breadcrumb */}
-          <div className="det-breadcrumb">
-            <Link href="/dashboard/events">
+          <div className="relative flex items-center gap-2 mb-6 text-xs text-[#333] tracking-widest">
+            <Link href="/dashboard/events" className="inline-flex items-center gap-1 text-[#333] transition-colors hover:text-[#b48c50]">
               <IconArrowLeft />
               Event Saya
             </Link>
-            <span className="det-breadcrumb-sep">/</span>
-            <span style={{ color: "#555" }}>Detail</span>
+            <span className="text-[#1a1a1a]">/</span>
+            <span className="text-[#555]">Detail</span>
           </div>
 
-          <div className="det-hero-top">
-            <div className="det-hero-left">
-              <div className="det-event-label">Event · {event.id.slice(0, 8).toUpperCase()}</div>
-              <h1 className="det-event-title">
+          <div className="relative flex items-start justify-between gap-5">
+            <div className="flex-1 min-w-0">
+              <div className="text-xs text-[#333] tracking-widest uppercase mb-2.5">Event · {event.id.slice(0, 8).toUpperCase()}</div>
+              <h1 className="font-serif text-4xl font-light text-[#e8e0d0] tracking-tight leading-tight mb-4">
                 {event.title.includes(" ") ? (
                   <>
                     {event.title.split(" ").slice(0, -1).join(" ")}{" "}
-                    <em>{event.title.split(" ").slice(-1)}</em>
+                    <em className="italic text-[#b48c50]">{event.title.split(" ").slice(-1)}</em>
                   </>
                 ) : (
-                  <em>{event.title}</em>
+                  <em className="italic text-[#b48c50]">{event.title}</em>
                 )}
               </h1>
-              <div className="det-hero-chips">
-                <span className="det-chip">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(255,255,255,0.03)] border border-[#1a1a1a] rounded text-xs text-[#444] tracking-tight">
                   <IconMapPin />
                   {event.location}
                 </span>
-                <span className="det-chip">
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(255,255,255,0.03)] border border-[#1a1a1a] rounded text-xs text-[#444] tracking-tight">
                   <IconCalendar />
                   {formatDate(startDate)}
                 </span>
                 {event.capacity && (
-                  <span className="det-chip">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(255,255,255,0.03)] border border-[#1a1a1a] rounded text-xs text-[#444] tracking-tight">
                     <IconUsers />
                     {event.capacity.toLocaleString("id-ID")} kapasitas
                   </span>
@@ -592,10 +298,10 @@ export default async function EventDetailPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="det-hero-right">
+            <div className="flex flex-col items-end gap-2 flex-shrink-0">
               <StatusBadge status={event.status ?? "draft"} />
               {isUpcoming && (
-                <div className="det-upcoming">Akan datang</div>
+                <div className="text-xs text-[#5a8830] tracking-widest uppercase px-2 py-1 border border-[rgba(90,136,48,0.25)] rounded-sm bg-[rgba(90,136,48,0.06)]">Akan datang</div>
               )}
               {/* Client action buttons: publish/unpublish/delete */}
               <EventDetailActions
@@ -609,11 +315,7 @@ export default async function EventDetailPage({ params }: Props) {
 
         {/* ── Cover Image ── */}
         {event.coverImage && (
-          <div style={{
-            position: "relative",
-            width: "100%", aspectRatio: "16/9", maxHeight: 420,
-            overflow: "hidden", background: "#111",
-          }}>
+          <div className="relative w-full bg-[#111]" style={{ aspectRatio: "16/9", maxHeight: 420, overflow: "hidden" }}>
             <Image
               src={event.coverImage}
               alt={event.title}
@@ -626,27 +328,24 @@ export default async function EventDetailPage({ params }: Props) {
         )}
 
         {/* ── Body ── */}
-        <div className="det-body">
+        <div className="grid grid-cols-[1fr_320px]">
           {/* Main */}
-          <div className="det-main">
+          <div className="border-r border-[#0d0d0d] px-11 py-9">
 
             {/* Category pill */}
             {category && (
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                padding: "5px 12px", borderRadius: 100,
-                background: "rgba(201,160,96,0.07)", border: "1px solid rgba(201,160,96,0.2)",
-                fontSize: 11, color: "#c9a060", letterSpacing: "0.06em",
-                fontFamily: "'DM Mono', monospace", marginBottom: 20,
-              }}>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(201,160,96,0.07)] border border-[rgba(201,160,96,0.2)] text-xs text-[#c9a060] tracking-tight font-mono mb-5">
                 {category.emoji} {category.name}
               </div>
             )}
 
             {/* Description */}
-            <div className="det-section">
-              <div className="det-section-title">Deskripsi</div>
-              <p className="det-description">{event.description}</p>
+            <div className="mb-9">
+              <div className="flex items-center gap-2 text-xs text-[#2e2e2e] tracking-widest uppercase mb-4">
+                Deskripsi
+                <div className="flex-1 h-px bg-[#0d0d0d]" />
+              </div>
+              <p className="text-xs text-[#666] leading-8 tracking-tight whitespace-pre-wrap">{event.description}</p>
             </div>
 
             {/* Gallery */}
@@ -655,31 +354,134 @@ export default async function EventDetailPage({ params }: Props) {
                 const urls: string[] = JSON.parse(event.galleryImages);
                 if (!urls.length) return null;
                 return (
-                  <div className="det-section">
-                    <div className="det-section-title">Galeri Foto</div>
-                    <div style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
-                      gap: 8, marginTop: 4,
-                    }}>
+                  <div className="mb-9">
+                    <div className="flex items-center gap-2 text-xs text-[#2e2e2e] tracking-widest uppercase mb-4">
+                      Galeri Foto
+                      <div className="flex-1 h-px bg-[#0d0d0d]" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
                       {urls.map((url, i) => (
-                        <div key={i} style={{
-                          position: "relative",
-                          aspectRatio: "1/1", borderRadius: 6,
-                          overflow: "hidden", background: "#1a1a1a",
-                        }}>
+                        <div key={i} className="relative bg-[#111]" style={{ aspectRatio: "1" }}>
                           <Image
                             src={url}
-                            alt={`Galeri ${i + 1}`}
+                            alt={`Gallery ${i + 1}`}
                             fill
                             style={{ objectFit: "cover" }}
-                            sizes="140px"
+                            sizes="(max-width: 900px) 50vw, 25vw"
                           />
                         </div>
                       ))}
                     </div>
                   </div>
                 );
+              } catch {
+                return null;
+              }
+            })()}
+
+            {/* Info section */}
+            <div className="mb-9">
+              <div className="flex items-center gap-2 text-xs text-[#2e2e2e] tracking-widest uppercase mb-4">
+                Informasi Event
+                <div className="flex-1 h-px bg-[#0d0d0d]" />
+              </div>
+              <div className="flex flex-col gap-0">
+                <InfoRow icon={<IconMapPin />} label="Lokasi" value={event.location} accent />
+                <InfoRow icon={<IconCalendar />} label="Tanggal Mulai" value={formatDateTime(startDate)} />
+                <InfoRow icon={<IconTimer />} label="Durasi" value={duration} />
+                <InfoRow icon={<IconTicket />} label="Harga" value={formatPrice(event.ticketPrice)} accent />
+                {event.capacity && <InfoRow icon={<IconUsers />} label="Kapasitas" value={`${event.capacity.toLocaleString("id-ID")} peserta`} />}
+              </div>
+            </div>
+
+            {/* Timeline section */}
+            <div className="mb-9">
+              <div className="flex items-center gap-2 text-xs text-[#2e2e2e] tracking-widest uppercase mb-4">
+                Timeline
+                <div className="flex-1 h-px bg-[#0d0d0d]" />
+              </div>
+              <div className="flex flex-col gap-0">
+                {/* Created */}
+                <div className="flex gap-4 pb-5">
+                  <div className="flex flex-col items-center w-4 flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full border border-[#b48c50] bg-[#0a0a0a] flex-shrink-0 mt-1" />
+                    <div className="w-px flex-1 bg-[#0d0d0d] mt-1" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs text-[#333] tracking-widest uppercase mb-1">Dibuat</div>
+                    <div className="text-xs text-[#888] tracking-tight">{formatDateTime(createdAt)}</div>
+                  </div>
+                </div>
+                {/* Updated */}
+                <div className="flex gap-4 pb-5">
+                  <div className="flex flex-col items-center w-4 flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full border border-[#b48c50] bg-[#0a0a0a] flex-shrink-0 mt-1" />
+                    <div className="w-px flex-1 bg-[#0d0d0d] mt-1" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs text-[#333] tracking-widest uppercase mb-1">Terakhir Diperbarui</div>
+                    <div className="text-xs text-[#888] tracking-tight">{formatDateTime(updatedAt)}</div>
+                  </div>
+                </div>
+                {/* Event date */}
+                <div className="flex gap-4">
+                  <div className="flex flex-col items-center w-4 flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full border border-[#222] bg-[#0a0a0a] flex-shrink-0 mt-1" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs text-[#333] tracking-widest uppercase mb-1">Event</div>
+                    <div className="text-xs text-[#888] tracking-tight">{formatDateTime(startDate)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Edit Section */}
+            <div className="mt-9 pt-9 border-t border-[#0d0d0d]">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xs text-[#2e2e2e] tracking-widest uppercase">Edit Event</h2>
+              </div>
+              <EditEventForm event={event} />
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="sticky top-0 h-fit px-7 py-9">
+            {/* Stats Card */}
+            <div className="bg-[#0f0f0f] border border-[#1a1a1a] rounded-lg overflow-hidden mb-3">
+              <div className="px-4 py-3 border-b border-[#0d0d0d] text-xs text-[#2e2e2e] tracking-widest uppercase">Statistik</div>
+              <div className="flex flex-col gap-0">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#0d0d0d]">
+                  <span className="text-xs text-[#333] tracking-tight">Tiket Terjual</span>
+                  <span className="text-xs text-[#888] tracking-tight text-right">{event.ticketSold ?? 0}</span>
+                </div>
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#0d0d0d]">
+                  <span className="text-xs text-[#333] tracking-tight">Pendapatan</span>
+                  <span className="text-xs text-[#b48c50] tracking-tight text-right">{formatPrice(event.ticketPrice)}</span>
+                </div>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-xs text-[#333] tracking-tight">Status</span>
+                  <span className="text-xs text-[#5a8830] tracking-tight text-right">{event.status === "published" ? "Aktif" : "Draft"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Timestamps */}
+            <div className="mt-3 pt-4 px-1">
+              <div className="flex justify-between text-xs text-[#222] tracking-tight pb-1.5 border-b border-[#0d0d0d]">
+                <span>Dibuat:</span>
+                <span>{formatDateTime(createdAt)}</span>
+              </div>
+              <div className="flex justify-between text-xs text-[#222] tracking-tight pt-1.5">
+                <span>Diperbarui:</span>
+                <span>{formatDateTime(updatedAt)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
               } catch { return null; }
             })()}
 

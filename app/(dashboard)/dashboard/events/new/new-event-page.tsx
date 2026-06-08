@@ -1,6 +1,5 @@
 "use client";
 
-import "@/app/new-event.css";
 import { useState, useEffect, useRef, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -328,42 +327,42 @@ export default function NewEventPage({
 
   return (
     <>
-<div className="np">
+      <div className="min-h-screen bg-[#0a0a0a] font-mono">
         {/* Topbar */}
-        <div className="np-topbar">
-          <div className="np-topbar-left">
-            <Link href="/dashboard/events" className="np-back"><IconArrowLeft /> Kembali</Link>
-            <div className="np-topbar-div" />
-            <span className="np-topbar-title">Event baru</span>
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#0d0d0d] bg-[#0f0f0f] px-12 py-3">
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard/events" className="inline-flex items-center gap-1 text-xs text-[#555] transition-colors hover:text-[#c9a060]"><IconArrowLeft /> Kembali</Link>
+            <div className="h-6 w-px bg-[#1e1e1e]" />
+            <span className="font-serif text-base font-light text-[#888]">Event baru</span>
           </div>
-          <div className="np-topbar-right">
-            <Link href="/dashboard/events" className="btn btn-secondary btn-sm">Batal</Link>
-            <button type="submit" form="nef" className="btn btn-primary btn-sm" disabled={isPending}>
-              {isPending ? <span className="spinner dark"><IconSpinner /></span> : <IconCheck />}
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard/events" className="inline-flex items-center gap-2 rounded-md border border-[#1e1e1e] px-3 py-2 text-xs uppercase tracking-wider text-[#555] transition-colors hover:border-[#2e2e2e] hover:text-[#888]">Batal</Link>
+            <button type="submit" form="nef" className="inline-flex items-center gap-1 rounded-md bg-[#c9a060] px-4 py-2 text-xs uppercase tracking-wider text-[#0a0a0a] transition-colors hover:bg-[#d4b070] disabled:bg-[#2a2a2a] disabled:text-[#444]" disabled={isPending}>
+              {isPending ? <span className="inline-flex animate-spin"><IconSpinner /></span> : <IconCheck />}
               {isPending ? "Menyimpan..." : "Simpan Event"}
             </button>
           </div>
         </div>
 
-        <div className="np-body">
+        <div className="grid grid-cols-[1fr_340px] min-h-[calc(100vh-63px)]">
           {/* Main */}
-          <div className="np-main">
-            <h1 className="np-title">Buat event <em>baru</em></h1>
-            <p className="np-subtitle">Isi detail event Anda. Field bertanda * wajib diisi.</p>
+          <div className="border-r border-[#0d0d0d] px-52 py-12">
+            <h1 className="font-serif text-4xl font-light tracking-tight text-[#f0e8d8] mb-2">Buat event <em className="italic text-[#c9a060]">baru</em></h1>
+            <p className="text-sm text-[#555] tracking-tight mb-7">Isi detail event Anda. Field bertanda * wajib diisi.</p>
 
             {error && (
-              <div className="alert alert-error">
-                <span style={{ flexShrink:0 }}>!</span>
+              <div className="mb-5 flex items-center gap-2 rounded-lg border border-[rgba(224,90,90,0.25)] bg-[rgba(224,90,90,0.08)] px-4 py-3 text-xs text-[#e05a5a]">
+                <span className="flex-shrink-0">!</span>
                 <div>{error}</div>
               </div>
             )}
 
-            <form id="nef" onSubmit={handleSubmit} noValidate>
+            <form id="nef" onSubmit={handleSubmit} noValidate className="flex flex-col gap-0">
 
               {/* Section 1 — Informasi Dasar */}
-              <div className="np-section">
+              <div className="mb-12">
                 <SectionHeader num="1" title="Informasi Dasar" desc="Nama, deskripsi, dan kategori event" />
-                <div className="np-grid-1">
+                <div className="flex flex-col gap-6">
                   <Field
                     icon={<IconText />} label="Judul Event" name="title" required
                     value={title} onChange={setTitle}
@@ -381,9 +380,9 @@ export default function NewEventPage({
               </div>
 
               {/* Section 2 — Lokasi & Waktu */}
-              <div className="np-section">
+              <div className="mb-12">
                 <SectionHeader num="2" title="Lokasi & Waktu" desc="Di mana dan kapan event berlangsung" />
-                <div className="np-grid-1">
+                <div className="flex flex-col gap-6">
                   <LocationField value={location} onChange={setLocation} />
                   <DateRangeFields
                     startVal={startDate} setStartVal={setStartDate}
@@ -393,9 +392,9 @@ export default function NewEventPage({
               </div>
 
               {/* Section 3 — Kapasitas & Tiket */}
-              <div className="np-section">
+              <div className="mb-12">
                 <SectionHeader num="3" title="Kapasitas & Tiket" desc="Jumlah peserta dan harga tiket (opsional)" />
-                <div className="np-grid-2">
+                <div className="grid grid-cols-2 gap-6">
                   <Field
                     icon={<IconUsers />} label="Kapasitas" name="capacity" type="number"
                     value={capacity} onChange={setCapacity}
@@ -410,9 +409,9 @@ export default function NewEventPage({
               </div>
 
               {/* Section 4 — Gambar */}
-              <div className="np-section">
+              <div className="mb-12">
                 <SectionHeader num="4" title="Gambar Event" desc="Cover banner, galeri foto, dan logo organizer" />
-                <div className="np-grid-1">
+                <div className="flex flex-col gap-6">
                   <SingleImageUpload
                     type="cover" name="coverImage"
                     label="Cover / Banner Event"
@@ -427,21 +426,21 @@ export default function NewEventPage({
                         maxImages={maxGalleryPhotos}
                         onChange={urls => setGalleryImages(JSON.stringify(urls))}
                       />
-                      <div style={{ display:"flex", alignItems:"flex-start", gap:24 }}>
+                      <div className="flex items-start gap-6">
                         <SingleImageUpload
                           type="logo" name="organizerLogo"
                           label="Logo Organizer" hint="Foto profil / logo. Maks 2 MB."
                           aspectRatio="1/1" maxSizeMB={2}
                         />
-                        <div style={{ flex:1, fontSize:11, color:"#3a3a3a", letterSpacing:"0.04em", lineHeight:1.8, fontFamily:"'DM Mono',monospace", paddingTop:36 }}>
+                        <div className="flex-1 pt-9 text-xs text-[#333] tracking-tight leading-relaxed font-mono">
                           Logo organizer akan tampil di halaman detail event.
                         </div>
                       </div>
                     </>
                   ) : (
-                    <div style={{ padding:"16px 18px", background:"rgba(201,160,96,0.04)", border:"1px solid rgba(201,160,96,0.1)", borderRadius:7, fontSize:11, color:"#555", letterSpacing:"0.04em", lineHeight:1.8, fontFamily:"'DM Mono',monospace" }}>
-                      <span style={{ color:"#c9a060" }}>🗂 Galeri foto & logo</span> tersedia di Basic, Pro, dan Komisi.{" "}
-                      <a href="/dashboard/upgrade" style={{ color:"#c9a060", textDecoration:"underline", textUnderlineOffset:3 }}>Upgrade</a>{" "}
+                    <div className="rounded-lg border border-[rgba(201,160,96,0.1)] bg-[rgba(201,160,96,0.04)] px-4 py-3 text-xs text-[#555] tracking-tight leading-relaxed font-mono">
+                      <span className="text-[#c9a060]">🗂 Galeri foto & logo</span> tersedia di Basic, Pro, dan Komisi.{" "}
+                      <a href="/dashboard/upgrade" className="text-[#c9a060] underline underline-offset-2">Upgrade</a>{" "}
                       untuk tampil lebih profesional.
                     </div>
                   )}
@@ -452,9 +451,9 @@ export default function NewEventPage({
           </div>
 
           {/* Sidebar */}
-          <div className="np-side">
-            <div className="np-side-label">Peta Lokasi</div>
-            <div style={{ borderRadius:8, overflow:"hidden", border:"1px solid #1e1e1e", background:"#141414", marginBottom:20 }}>
+          <div className="sticky top-[63px] max-h-[calc(100vh-63px)] overflow-y-auto bg-[#0a0a0a] px-7 py-9">
+            <div className="text-xs font-mono text-[#333] tracking-widest uppercase mb-3">Peta Lokasi</div>
+            <div className="rounded-lg border border-[#1e1e1e] bg-[#141414] overflow-hidden mb-5">
               {location.trim().length >= 3 ? (
                 <iframe
                   key={location}
@@ -465,20 +464,20 @@ export default function NewEventPage({
                   title="Peta lokasi"
                 />
               ) : (
-                <div style={{ height:200, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:8 }}>
-                  <span style={{ fontSize:28 }}>🗺</span>
-                  <span style={{ fontSize:11, color:"#2a2a2a", letterSpacing:"0.06em", fontFamily:"'DM Mono',monospace" }}>
+                <div className="h-[200px] flex flex-col items-center justify-center gap-2">
+                  <span className="text-2xl">🗺</span>
+                  <span className="text-xs text-[#2a2a2a] tracking-tight font-mono">
                     Peta muncul setelah lokasi diisi
                   </span>
                 </div>
               )}
             </div>
 
-            <div className="np-side-label">Tips</div>
-            <div className="np-tip"><div className="np-tip-dot"/>Judul spesifik meningkatkan klik hingga 3×</div>
-            <div className="np-tip"><div className="np-tip-dot"/>Pilih kategori agar event mudah ditemukan</div>
-            <div className="np-tip"><div className="np-tip-dot"/>Event gratis mendapat lebih banyak pendaftar</div>
-            <div className="np-tip"><div className="np-tip-dot"/>Disimpan sebagai <em style={{ color:"#555" }}>Draft</em> — publish kapan saja</div>
+            <div className="text-xs font-mono text-[#333] tracking-widest uppercase mb-2">Tips</div>
+            <div className="flex items-start gap-2 text-xs text-[#333] tracking-tight leading-relaxed mb-2 font-mono"><div className="mt-2 h-1 w-1 rounded-full bg-[#1a1a1a] flex-shrink-0"/>Judul spesifik meningkatkan klik hingga 3×</div>
+            <div className="flex items-start gap-2 text-xs text-[#333] tracking-tight leading-relaxed mb-2 font-mono"><div className="mt-2 h-1 w-1 rounded-full bg-[#1a1a1a] flex-shrink-0"/>Pilih kategori agar event mudah ditemukan</div>
+            <div className="flex items-start gap-2 text-xs text-[#333] tracking-tight leading-relaxed mb-2 font-mono"><div className="mt-2 h-1 w-1 rounded-full bg-[#1a1a1a] flex-shrink-0"/>Event gratis mendapat lebih banyak pendaftar</div>
+            <div className="flex items-start gap-2 text-xs text-[#333] tracking-tight leading-relaxed font-mono"><div className="mt-2 h-1 w-1 rounded-full bg-[#1a1a1a] flex-shrink-0"/>Disimpan sebagai <em className="text-[#555]">Draft</em> — publish kapan saja</div>
           </div>
         </div>
       </div>
