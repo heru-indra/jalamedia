@@ -29,34 +29,34 @@ export default async function EventsPage({ searchParams }: Props) {
   const atLimit  = tc.maxEvents !== 999 && all.length >= tc.maxEvents;
   const nPub = all.filter(e=>e.status==="published").length;
   const nDrf = all.filter(e=>e.status==="draft").length;
-  const sCls = (s:string|null) => s==="published"?"text-[#6aaa38] bg-[rgba(106,170,56,0.1)] border-[rgba(106,170,56,0.3)]":s==="cancelled"?"text-[#e05a5a] bg-[rgba(224,90,90,0.08)] border-[rgba(224,90,90,0.25)]":"text-[#555] bg-white/[0.04] border-[#252525]";
+  const sCls = (s:string|null) => s==="published"?"text-green-600 bg-green-600/10 border-green-600/30":s==="cancelled"?"text-red-500 bg-red-500/10 border-red-500/30":"text-muted-foreground bg-muted/10 border-muted";
   const sLbl = (s:string|null) => s==="published"?"Aktif":s==="cancelled"?"Batal":"Draft";
 
   return (
-    <div className="min-h-full bg-[#0a0a0a] font-[family-name:var(--font-mono)] p-11">
+    <div className="min-h-full bg-background font-mono p-11">
       <div className="flex items-start justify-between mb-7 flex-wrap gap-4">
         <div>
-          <div className="text-[10px] text-[#333] tracking-[0.16em] uppercase mb-1.5">Event Saya</div>
-          <h1 className="font-[family-name:var(--font-serif)] text-[clamp(24px,3vw,42px)] font-light text-[#f0e8d8] tracking-[-0.01em]">Kelola <em className="italic text-[#c9a060]">Event</em></h1>
+          <div className="text-xs text-muted-foreground tracking-widest uppercase mb-1.5">Event Saya</div>
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-foreground">Kelola <em className="italic text-accent">Event</em></h1>
         </div>
         {!atLimit ? (
-          <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-5 py-3 bg-[#c9a060] rounded-[7px] text-[#0a0a0a] text-[13px] tracking-widest uppercase no-underline hover:bg-[#d4b070]"><IconPlus /> Buat Event</Link>
+          <Link href="/dashboard/events/new" className="inline-flex items-center gap-2 px-5 py-3 bg-accent rounded-lg text-background text-xs tracking-widest uppercase no-underline hover:bg-accent/90 transition-colors"><IconPlus /> Buat Event</Link>
         ) : (
-          <Link href="/dashboard/upgrade" className="px-4 py-2.5 bg-[rgba(201,160,96,0.07)] border border-[rgba(201,160,96,0.25)] rounded text-[#c9a060] text-[11px] tracking-widest uppercase no-underline text-xs">Upgrade untuk tambah event</Link>
+          <Link href="/dashboard/upgrade" className="px-4 py-2.5 bg-accent/10 border border-accent/30 rounded text-accent text-xs tracking-widest uppercase no-underline">Upgrade untuk tambah event</Link>
         )}
       </div>
 
       {/* Summary */}
-      <div className="flex mb-6 border border-[#141414] rounded-[7px] overflow-hidden">
+      <div className="flex mb-6 border border-muted rounded-lg overflow-hidden">
         {[
           { n: all.length, l: "Total" },
-          { n: nPub, l: "Aktif", c: "text-[#6aaa38]" },
+          { n: nPub, l: "Aktif", c: "text-green-600" },
           { n: nDrf, l: "Draft" },
-          { n: tc.maxEvents === 999 ? "∞" : tc.maxEvents, l: "Batas", c: "text-[#c9a060]" },
+          { n: tc.maxEvents === 999 ? "∞" : tc.maxEvents, l: "Batas", c: "text-accent" },
         ].map((s, i) => (
-          <div key={i} className="flex-1 px-5 py-4 bg-[#0f0f0f] border-r border-[#141414] last:border-0">
-            <div className={`font-[family-name:var(--font-serif)] text-2xl font-light leading-none mb-1 ${s.c ?? "text-[#f0e8d8]"}`}>{s.n}</div>
-            <div className="text-[10px] text-[#333] tracking-[0.16em] uppercase">{s.l}</div>
+          <div key={i} className="flex-1 px-5 py-4 bg-muted/20 border-r border-muted last:border-0">
+            <div className={`font-serif text-2xl font-light leading-none mb-1 ${s.c ?? "text-foreground"}`}>{s.n}</div>
+            <div className="text-xs text-muted-foreground tracking-widest uppercase">{s.l}</div>
           </div>
         ))}
       </div>
@@ -65,7 +65,7 @@ export default async function EventsPage({ searchParams }: Props) {
       <div className="flex gap-1.5 mb-5 flex-wrap">
         {[{k:"",l:"Semua",n:all.length},{k:"published",l:"Aktif",n:nPub},{k:"draft",l:"Draft",n:nDrf}].map(t=>(
           <Link key={t.k} href={t.k?`/dashboard/events?status=${t.k}${catSlug?`&category=${catSlug}`:""}`:`/dashboard/events${catSlug?`?category=${catSlug}`:""}`}
-            className={`px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.08em] no-underline border transition-all ${(sf??"")===t.k?"border-[#2e2e2e] text-[#f0e8d8] bg-white/[0.04]":"border-[#1e1e1e] text-[#555] hover:text-[#888] hover:border-[#252525]"}`}>
+            className={`px-3.5 py-1.5 rounded-full text-xs tracking-widest no-underline border transition-all ${(sf??"")===t.k?"border-muted text-foreground bg-muted/10":"border-muted/50 text-muted-foreground hover:text-muted hover:border-muted"}`}>
             {t.l} <span className="opacity-50 ml-1">{t.n}</span>
           </Link>
         ))}
@@ -73,12 +73,12 @@ export default async function EventsPage({ searchParams }: Props) {
 
       {/* Category tabs */}
       <div className="flex gap-1.5 mb-5 flex-wrap">
-        <Link href={`/dashboard/events${sf?`?status=${sf}`:""}`} className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.08em] no-underline border transition-all ${!catSlug?"border-[#c9a060] text-[#c9a060] bg-[rgba(201,160,96,0.07)]":"border-[#1e1e1e] text-[#555] hover:text-[#888]"}`}>
+        <Link href={`/dashboard/events${sf?`?status=${sf}`:""}`} className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-xs tracking-widest no-underline border transition-all ${!catSlug?"border-accent text-accent bg-accent/10":"border-muted/50 text-muted-foreground hover:text-muted"}`}>
           Semua kategori
         </Link>
         {allCats.map(c=>(
           <Link key={c.id} href={`/dashboard/events?category=${c.slug}${sf?`&status=${sf}`:""}`}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.08em] no-underline border transition-all ${catSlug===c.slug?"border-[#c9a060] text-[#c9a060] bg-[rgba(201,160,96,0.07)]":"border-[#1e1e1e] text-[#555] hover:text-[#888]"}`}>
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs tracking-widest no-underline border transition-all ${catSlug===c.slug?"border-accent text-accent bg-accent/10":"border-muted/50 text-muted-foreground hover:text-muted"}`}>
             {c.emoji} {c.name}
           </Link>
         ))}
@@ -86,25 +86,25 @@ export default async function EventsPage({ searchParams }: Props) {
 
       {/* Table */}
       {rows.length === 0 ? (
-        <div className="py-16 text-center border border-[#141414] rounded-[10px] bg-[#0f0f0f]">
+        <div className="py-16 text-center border border-muted rounded-xl bg-muted/20">
           <div className="text-4xl mb-4 opacity-50">📭</div>
-          <div className="font-[family-name:var(--font-serif)] text-xl font-light text-[#555] mb-2">Tidak ada event</div>
-          <p className="text-[13px] text-[#333] mb-6">Tidak ada event sesuai filter ini.</p>
+          <div className="font-serif text-xl font-light text-muted-foreground mb-2">Tidak ada event</div>
+          <p className="text-sm text-muted mb-6">Tidak ada event sesuai filter ini.</p>
         </div>
       ) : (
-        <div className="bg-[#0f0f0f] border border-[#141414] rounded-[10px] overflow-hidden">
-          <div className="hidden md:grid grid-cols-[1fr_140px_120px_100px_120px] px-5 py-2.5 border-b border-[#141414] bg-[#0a0a0a]">
-            {["Judul Event","Tanggal Mulai","Harga","Status","Aksi"].map(h=><span key={h} className="text-[10px] text-[#333] tracking-[0.16em] uppercase last:text-right">{h}</span>)}
+        <div className="bg-muted/20 border border-muted rounded-xl overflow-hidden">
+          <div className="hidden md:grid grid-cols-[1fr_140px_120px_100px_120px] px-5 py-2.5 border-b border-muted bg-background">
+            {["Judul Event","Tanggal Mulai","Harga","Status","Aksi"].map(h=><span key={h} className="text-xs text-muted tracking-widest uppercase last:text-right">{h}</span>)}
           </div>
           {rows.map(({event:ev,category:cat})=>(
-            <div key={ev.id} className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_140px_120px_100px_120px] px-5 items-center min-h-[76px] border-b border-[#0d0d0d] last:border-0 hover:bg-white/[0.015] transition-colors">
+            <div key={ev.id} className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_140px_120px_100px_120px] px-5 items-center min-h-[76px] border-b border-muted/50 last:border-0 hover:bg-white/5 transition-colors">
               <div className="py-4 min-w-0">
-                <Link href={`/dashboard/events/${ev.id}`} className="block text-[15px] text-[#c0b8a8] truncate no-underline hover:text-[#f0e8d8] mb-1.5 transition-colors">{ev.title}</Link>
-                {cat && <span className="inline-flex items-center gap-1 px-2 py-px text-[10px] bg-white/[0.04] border border-[#1e1e1e] rounded-full text-[#555]">{cat.emoji} {cat.name}</span>}
+                <Link href={`/dashboard/events/${ev.id}`} className="block text-base text-foreground/80 truncate no-underline hover:text-foreground mb-1.5 transition-colors">{ev.title}</Link>
+                {cat && <span className="inline-flex items-center gap-1 px-2 py-px text-xs bg-muted/10 border border-muted/50 rounded-full text-muted-foreground">{cat.emoji} {cat.name}</span>}
               </div>
-              <div className="hidden md:block text-[11px] text-[#333]">{fmtDate(new Date(ev.startDate))}</div>
-              <div className="hidden md:block text-[11px] text-[#555]">{fmtPrice(ev.ticketPrice)}</div>
-              <div className="hidden md:flex"><span className={`inline-flex items-center px-2.5 py-1 text-[10px] tracking-[0.1em] uppercase rounded border ${sCls(ev.status)}`}>{sLbl(ev.status)}</span></div>
+              <div className="hidden md:block text-xs text-muted">{fmtDate(new Date(ev.startDate))}</div>
+              <div className="hidden md:block text-xs text-muted-foreground">{fmtPrice(ev.ticketPrice)}</div>
+              <div className="hidden md:flex"><span className={`inline-flex items-center px-2.5 py-1 text-xs tracking-widest uppercase rounded border ${sCls(ev.status)}`}>{sLbl(ev.status)}</span></div>
               <div className="flex justify-end"><EventActions eventId={ev.id} status={ev.status??"draft"} canPublish={tc.canPublish} /></div>
             </div>
           ))}
