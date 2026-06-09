@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className="scroll-smooth">
+    <html lang="id" className="scroll-smooth bg-[var(--color-bg)]">
       <body className="antialiased">
         {children}
       </body>
